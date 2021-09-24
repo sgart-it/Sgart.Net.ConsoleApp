@@ -1,0 +1,8 @@
+[
+  {
+    "outputFileName": "ClientApp/src/pages/Todo.min.js",
+    "inputFiles": [
+      "ClientApp/src/pages/Todo.js"
+    ]
+  }
+]

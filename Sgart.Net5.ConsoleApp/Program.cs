@@ -42,6 +42,7 @@ namespace Sgart.Net5.ConsoleApp
 
                         using (var serviceScope = host.Services.CreateScope())
                         {
+                            // applicazione migration e dati iniziali al database
                             DbUpdater.Upgrade(serviceScope);
 
                             var services = serviceScope.ServiceProvider;
@@ -86,7 +87,7 @@ namespace Sgart.Net5.ConsoleApp
                     {
                         options.UseSqlServer(
                             configuration.GetConnectionString("DefaultConnection"),
-                            // imposto in quale assembli si trovano le migration
+                            // imposto in quale assembly si trovano le migration
                             b => b.MigrationsAssembly(typeof(SgartDbContext).Assembly.GetName().Name)
                             //b => b.MigrationsAssembly("Sgart.Net5.ConsoleApp")
                         );

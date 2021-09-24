@@ -3,7 +3,8 @@ Class library con con la configurazione di EF e le migrations
 
 # Migration
 per creare una nuova migration
-=> dotnet ef migrations add NomeMigrazione
+
+=> cd Sgart.Net5.ConsoleApp.Data; dotnet ef migrations add NomeMigrazione
 
 # Possibili Errori
 

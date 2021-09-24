@@ -20,6 +20,9 @@ namespace Sgart.Net5.ConsoleApp.BO
         [Required]
         public DateTime Created { get; set; }
 
+        [Required]
+        public DateTime Modified { get; set; }
+
         //[StringLength(100)]
         //public string Note { get; set; }
     }
