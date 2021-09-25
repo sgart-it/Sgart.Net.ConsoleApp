@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sgart.Net5.ConsoleApp.Data;
 
 namespace Sgart.Net5.ConsoleApp.Data.Migrations
 {
     [DbContext(typeof(SgartDbContext))]
-    partial class SgartDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210925195727_RenameField")]
+    partial class RenameField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

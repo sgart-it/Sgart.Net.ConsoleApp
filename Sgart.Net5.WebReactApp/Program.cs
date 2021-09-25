@@ -28,9 +28,9 @@ namespace Sgart.Net5.WebReactApp
 
                 CreateHostBuilder(args).Build().Run();
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                logger.Error(exception, "Stopped program because of exception");
+                logger.Error(ex, "Stopped program because of exception");
                 throw;
             }
             finally

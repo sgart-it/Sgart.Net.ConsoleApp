@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sgart.Net5.ConsoleApp.BO
+namespace Sgart.Net5.ConsoleApp.BO.Entities
 {
     /// <summary>
     /// classe di esempio mappata sul DB (tabella Todos)
@@ -18,10 +18,12 @@ namespace Sgart.Net5.ConsoleApp.BO
         public TodoData DataJson { get; set; }
 
         [Required]
-        public DateTime Created { get; set; }
+        //[DateTimeKind(DateTimeKind.Utc)]
+        public DateTime CreatedUTC { get; set; }
 
         [Required]
-        public DateTime Modified { get; set; }
+        //[DateTimeKind(DateTimeKind.Utc)]
+        public DateTime ModifiedUTC { get; set; }
 
         //[StringLength(100)]
         //public string Note { get; set; }

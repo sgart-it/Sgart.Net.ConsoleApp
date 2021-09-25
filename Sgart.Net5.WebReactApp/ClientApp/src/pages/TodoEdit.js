@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import todoService from '../services/TodoService'
-import { Button, Form, FormGroup, Label, Input, CustomInput, Alert, FormFeedback, Spinner } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, CustomInput, Alert, FormFeedback } from 'reactstrap';
 import { Link, Redirect } from 'react-router-dom';
 import { PageHeader } from '../components/PageHeader';
+import { LoadingInline } from '../components/LoadingInline';
 
 export class TodoEdit extends Component {
   static displayName = TodoEdit.name;
@@ -68,19 +69,18 @@ export class TodoEdit extends Component {
           <Label for="message1">Messaggio</Label>
           <Input type="text" value={message} onChange={(e) => this.setState({ message: e.target.value })} invalid={!this.isMessageValid()}
             name="message1" id="message1" placeholder="" />
-          <FormFeedback invalid>Il messaggio non pu&ograve; essere vuoto</FormFeedback>
+          <FormFeedback invalid='true'>Il messaggio non pu&ograve; essere vuoto</FormFeedback>
         </FormGroup>
         <FormGroup>
-          <CustomInput type="switch" id="completed1" name="completed1" label={completed === true ? 'Completato' : 'Da completare'}
-            value={completed} onChange={(e) => this.setState({ completed: e.target.checked })} />
+          <CustomInput type="switch" id="completed-1" label={completed === true ? 'Completato' : 'Da completare'}
+            checked={completed} onChange={(e) => this.setState({ completed: e.target.checked })} />
         </FormGroup>
-        <p></p>
-        <Button size="sm" disabled={!this.isButtonEnabled()}>Salva</Button> {loading === true && <Spinner color="secondary" />}
-        <span> </span>
-        <Button variant="outline-light" size="sm" tag={Link} to='/todo'>Annulla</Button>
-
-        <p></p>
-        <Alert color="secondary">Debug only: Message={message} | Completed={completed.toString()}</Alert>
+        <div className='buttons-bar'>
+          <Button size="sm" disabled={!this.isButtonEnabled()}>Salva</Button>
+          <Button variant="outline-light" size="sm" tag={Link} to='/todo'>Annulla</Button>
+          <LoadingInline show={loading} />
+        </div>
+        <Alert color="secondary">Debug only: State={JSON.stringify(this.state)}</Alert>
       </Form>
     );
   }

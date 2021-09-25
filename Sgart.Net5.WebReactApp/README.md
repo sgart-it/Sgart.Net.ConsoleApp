@@ -1,1 +1,1 @@
-# Demo Web application .Net 5 + EF + Nlog + React + WebAPI
+# Demo Web application .Net 5 + EF Core 5 + Nlog + React + WebAPI

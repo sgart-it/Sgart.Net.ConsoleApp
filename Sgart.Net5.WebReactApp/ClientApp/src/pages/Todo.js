@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
+import { Button, Spinner } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import todoService from '../services/TodoService'
-import { Loading } from '../components/Loading';
 import { PageHeader } from '../components/PageHeader';
+import { DateTime } from '../components/DateTime';
 import './Todo.css';
-import { event } from 'jquery';
 
 export class Todo extends Component {
   static displayName = Todo.name;
@@ -20,6 +19,10 @@ export class Todo extends Component {
   }
 
   componentDidMount() {
+    this.populateData();
+  }
+
+  handleRefresh = () => {
     this.populateData();
   }
 
@@ -42,7 +45,8 @@ export class Todo extends Component {
     this.populateData();
   }
 
-  static renderTable(items, handleEdit, handleDelete) {
+  // questo metodo è statico quindi non posso usare this, ma devo passargli gli oggetti che mi servono
+  static renderTable(items, handleDelete) {
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
@@ -59,12 +63,12 @@ export class Todo extends Component {
             <tr key={item.todoId}>
               <td>{item.todoId}</td>
               <td>{item.message}</td>
-              <td>{item.modified}</td>
               <td><div className={item.completed ? 'todo-completed' : ''}>{item.completed ? 'Si' : 'No'}</div></td>
+              <td><DateTime date={item.modified} /></td>
               <td>
                 <Button variant="outline-light" size="sm" tag={Link} to={'/todo/edit/' + item.todoId}>Modifica</Button>
-                {' '}
-                <Button variant="outline-light" size="sm" onChange={(e) => this.handleDelete(item.todoId, e)}>Cancella</Button>
+                {' ' /* attenzione il Button usa l'evento onClick non onChange */}
+                <Button variant="outline-light" size="sm" onClick={(e) => handleDelete(item.todoId, e)}>Cancella</Button>
               </td>
             </tr>
           )}
@@ -74,14 +78,17 @@ export class Todo extends Component {
   }
 
   render() {
-    let contents = this.state.loading
-      ? <Loading show={this.state.loading} />
-      : Todo.renderTable(this.state.items);
+    let contents = Todo.renderTable(this.state.items, this.handleDelete);
 
     return (
       <div>
         <PageHeader title='Todo' description='Esempio lettura API in React' message={this.state.error} />
-        <Button variant="outline-light" size="sm" tag={Link} to='/todo/add'>Aggiungi</Button>
+        <div className='buttons-bar'>
+          <Button variant="outline-light" size="sm" tag={Link} to='/todo/add'>Aggiungi</Button>
+
+          <Button variant="outline-light" size="sm" onClick={this.handleRefresh}>Aggiorna</Button>
+          {this.state.loading === true && <Spinner color="secondary" />}
+        </div>
         {contents}
       </div>
     );

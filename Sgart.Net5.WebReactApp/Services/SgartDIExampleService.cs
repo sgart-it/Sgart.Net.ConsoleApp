@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Sgart.Net5.ConsoleApp.BO;
 using Sgart.Net5.ConsoleApp.BO.DTO;
+using Sgart.Net5.ConsoleApp.BO.Entities;
 using Sgart.Net5.ConsoleApp.BO.InputDTO;
 using Sgart.Net5.ConsoleApp.Data;
 using Sgart.Net5.WebReactApp.Models;
@@ -30,17 +31,25 @@ namespace Sgart.Net5.WebReactApp.Services
         public async Task<List<TodoDTO>> GetAllAsync()
         {
             _logger.LogDebug($"GetTodosAsync starting...");
+            try
+            {
+                // .AsNoTracking() aumenta la velocità delle query di sola lettura
+                return await _context.Todos.AsNoTracking()
+                    .OrderBy(x => x.TodoId)
+                    .Select(item => new TodoDTO
+                    {
+                        TodoId = item.TodoId,
+                        Message = item.DataJson.Text,
+                        Completed = item.DataJson.Completed,
+                        Modified = item.ModifiedUTC
+                    }).ToListAsync();
 
-            // .AsNoTracking() aumenta la velocità delle query di sola lettura
-            return await _context.Todos.AsNoTracking()
-                .OrderBy(x => x.TodoId)
-                .Select(item => new TodoDTO
-                {
-                    TodoId = item.TodoId,
-                    Message = item.DataJson.Text,
-                    Completed = item.DataJson.Completed,
-                    Modified = item.Modified
-                }).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "AddTodosAsync error");
+            }
+            return null;
 
             //var items = await _context.Todos.AsNoTracking()
             //    .OrderBy(x => x.TodoId)
@@ -61,79 +70,122 @@ namespace Sgart.Net5.WebReactApp.Services
         public async Task<TodoDTO> Get(int todoId)
         {
             _logger.LogDebug($"GetById starting...");
-
-            // .AsNoTracking() aumenta la velocità delle query di sola lettura
-            var item = await _context.Todos.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.TodoId == todoId);
-
-            if (item == null)
-                return null;
-
-            return new TodoDTO
+            try
             {
-                TodoId = item.TodoId,
-                Message = item.DataJson.Text,
-                Completed = item.DataJson.Completed,
-                Modified = item.Modified
-            };
+                // SingleOrDefaultAsync ritorna un singolo elemento oppure null se non trovato
+                var item = await _context.Todos.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.TodoId == todoId);
+
+                if (item == null)
+                {
+                    _logger.LogWarning($"Todo id {todoId} not found");
+                }
+                else
+                {
+                    return new TodoDTO
+                    {
+                        TodoId = item.TodoId,
+                        Message = item.DataJson.Text,
+                        Completed = item.DataJson.Completed,
+                        Modified = item.ModifiedUTC
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "AddTodosAsync error");
+            }
+            return null;
+
         }
 
 
         public async Task AddAsync(TodoAddDTO data)
         {
             _logger.LogDebug($"AddTodosAsync starting...");
-
-            var d = new Todo
+            try
             {
-                TodoId = 0,
-                DataJson = new TodoData
+                var d = new Todo
                 {
-                    Text = data.Message,
-                    Completed = data.Completed
-                },
-                Created = DateTime.Now
-            };
+                    TodoId = 0,
+                    DataJson = new TodoData
+                    {
+                        Text = data.Message,
+                        Completed = data.Completed
+                    },
+                    CreatedUTC = DateTime.UtcNow
+                };
 
-            await _context.Todos.AddAsync(d);
+                await _context.Todos.AddAsync(d);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "AddTodosAsync error");
+            }
+
         }
 
         public async Task<bool> EditAsync(TodoEditDTO data)
         {
             _logger.LogDebug($"EditTodosAsync starting...");
-
-            var item = await _context.Todos.FirstOrDefaultAsync(x => x.TodoId == data.TodoId);
-
-            if (item == null)
+            try
             {
-                _logger.LogError($"Todo id {data.TodoId} not found");
-                return false;
+                // TODO: ????
+                var item = await _context.Todos.FirstOrDefaultAsync(x => x.TodoId == data.TodoId);
+
+                if (item == null)
+                {
+                    _logger.LogWarning($"Todo id {data.TodoId} not found");
+                }
+                else
+                {
+                    // se non cambi l'oggetto non si accorge delle modifiche
+                    item.DataJson = new TodoData
+                    {
+                        Text = data.Message,
+                        Completed = data.Completed
+                    };
+                    item.ModifiedUTC = DateTime.UtcNow;
+
+                    await _context.SaveChangesAsync();
+
+                    return true;
+                }
             }
-            item.DataJson.Text = data.Message;
-            item.DataJson.Completed = data.Completed;
-
-            await _context.SaveChangesAsync();
-
-            return true;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "EditTodosAsync error");
+            }
+            return false;
         }
 
         public async Task<bool> DeleteAsync(int todoId)
         {
             _logger.LogDebug($"EditTodosAsync starting...");
-
-            var item = await _context.Todos.FirstOrDefaultAsync(x => x.TodoId == todoId);
-
-            if (item == null)
+            try
             {
-                _logger.LogError($"Todo id {todoId} not found");
-                return false;
+                var item = await _context.Todos.FirstOrDefaultAsync(x => x.TodoId == todoId);
+
+                if (item == null)
+                {
+                    _logger.LogError($"Todo id {todoId} not found");
+                }
+                else
+                {
+                    _context.Remove(item);
+
+                    await _context.SaveChangesAsync();
+
+                    return true;
+                }
             }
-            _context.Remove(item);
-
-            await _context.SaveChangesAsync();
-
-            return true;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "EditTodosAsync error");
+            }
+            return false;
         }
     }
 }

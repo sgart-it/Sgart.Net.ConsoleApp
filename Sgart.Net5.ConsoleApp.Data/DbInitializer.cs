@@ -1,4 +1,5 @@
 ﻿using Sgart.Net5.ConsoleApp.BO;
+using Sgart.Net5.ConsoleApp.BO.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace Sgart.Net5.ConsoleApp.Data
 
                 DateTime dt = DateTime.UtcNow;
 
+                // inserisco dei valori iniziali
                 var todoItems = new List<Todo>
                 {
                     new Todo
@@ -32,7 +34,8 @@ namespace Sgart.Net5.ConsoleApp.Data
                             Text = "Configurare la connection string",
                             Completed = true
                         },
-                        Created = dt
+                        CreatedUTC = dt,
+                        ModifiedUTC = dt
                     },
                     new Todo
                     {
@@ -41,7 +44,8 @@ namespace Sgart.Net5.ConsoleApp.Data
                             Text = "Configurare il percorso dei log",
                             Completed = false
                         },
-                        Created = dt
+                        CreatedUTC = dt,
+                        ModifiedUTC = dt
                     },
                     new Todo
                     {
@@ -50,12 +54,16 @@ namespace Sgart.Net5.ConsoleApp.Data
                             Text = "Eseguire la console app",
                             Completed = false
                         },
-                        Created = dt
+                        CreatedUTC = dt,
+                        ModifiedUTC = dt
                     }
 
                 };
 
+                // li aggiungo al conttesto nella tabella
                 context.Todos.AddRange(todoItems);
+
+                // persist/salvo i cambiamenti su DB
                 context.SaveChanges();
             }
         }

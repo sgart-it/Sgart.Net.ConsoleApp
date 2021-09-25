@@ -7,7 +7,7 @@ export class Loading extends Component {
 
   render() {
     return (
-      this.props.show && <div className='page-loading'>
+      this.props.show === true && <div className='page-loading'>
         <Spinner animation="border" role="status" aria-hidden="true" className="spinner" />
         <span>Attendi ...</span>
       </div>

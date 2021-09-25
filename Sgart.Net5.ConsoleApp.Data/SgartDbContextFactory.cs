@@ -12,7 +12,7 @@ namespace Sgart.Net5.ConsoleApp.Data
         public SgartDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<SgartDbContext>();
-            optionsBuilder.UseSqlServer("Data Source=blog.db");
+            optionsBuilder.UseSqlServer("Data Source=...impostare la stringa di connessione per fare il remove delle migration...");
 
             return new SgartDbContext(optionsBuilder.Options);
         }

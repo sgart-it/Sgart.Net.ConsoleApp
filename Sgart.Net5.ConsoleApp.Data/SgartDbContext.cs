@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sgart.Net5.ConsoleApp.BO.Entities;
+using System;
 
 namespace Sgart.Net5.ConsoleApp.Data
 {
@@ -8,8 +10,9 @@ namespace Sgart.Net5.ConsoleApp.Data
         {
         }
 
-        // aggiungere tutte le entite/tabelle
-        public DbSet<BO.Todo> Todos { get; set; }
+        // aggiungere tutte le entità/tabelle
+        public DbSet<Todo> Todos { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,7 +21,7 @@ namespace Sgart.Net5.ConsoleApp.Data
             // regitro tutte le configurazioni presenti nell'assembly
             // vedi cartella Configurations
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(SgartDbContext).Assembly);
-            
+
             // aggiungere eventuali indici o vincoli di univocità
 
             //var eUser = modelBuilder.Entity<User>();

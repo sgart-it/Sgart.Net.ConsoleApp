@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sgart.Net5.ConsoleApp.BO;
+using Sgart.Net5.ConsoleApp.BO.Entities;
 using System.Text.Json;
 
 namespace Sgart.Net5.ConsoleApp.Data.Configurations
