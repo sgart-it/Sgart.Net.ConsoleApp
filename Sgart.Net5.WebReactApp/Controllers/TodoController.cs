@@ -30,11 +30,24 @@ namespace Sgart.Net5.WebReactApp.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoDTO>>> Get()
+        public async Task<ActionResult<IEnumerable<TodoDTO>>> GetAll()
         {
             _logger.LogTrace("Get TodoDTO");
 
-            return Ok(await _service.GetTodoAllAsync());
+            return Ok(await _service.GetAllAsync());
+        }
+
+        /// <summary>
+        /// ritorna tutti gli elementi della tabella
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{todoId}")]
+        public async Task<ActionResult<TodoDTO>> Get(int todoId)
+        {
+            _logger.LogTrace($"Get TodoDTO id: {todoId}");
+
+            return Ok(await _service.Get(todoId));
         }
 
         /// <summary>
@@ -47,7 +60,7 @@ namespace Sgart.Net5.WebReactApp.Controllers
         {
             _logger.LogTrace($"Post TodoDTO: {JsonSerializer.Serialize(data)}");
 
-            await _service.AddTodoAsync(data);
+            await _service.AddAsync(data);
 
             return NoContent();
         }
@@ -62,7 +75,7 @@ namespace Sgart.Net5.WebReactApp.Controllers
         {
             _logger.LogTrace($"Put TodoDTO: {JsonSerializer.Serialize(data)}");
 
-            if (await _service.EditTodoAsync(data))
+            if (await _service.EditAsync(data))
                 return NoContent();
 
             return BadRequest();
@@ -78,7 +91,7 @@ namespace Sgart.Net5.WebReactApp.Controllers
         {
             _logger.LogTrace($"Delete TodoDTO: {todoId}");
 
-            if (await _service.DeleteTodoAsync(todoId))
+            if (await _service.DeleteAsync(todoId))
                 return NoContent();
 
             return BadRequest();

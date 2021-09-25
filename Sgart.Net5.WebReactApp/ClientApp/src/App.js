@@ -6,6 +6,7 @@ import { FetchData } from './pages/FetchData';
 import { Counter } from './pages/Counter';
 import { Todo } from './pages/Todo';
 import { TodoAdd } from './pages/TodoAdd';
+import { TodoEdit } from './pages/TodoEdit';
 
 import './custom.css'
 
@@ -18,7 +19,7 @@ export default class App extends Component {
         <Route exact path='/' component={Home} />
         <Route exact path='/todo' component={Todo} />
         <Route exact path='/todo/add' component={TodoAdd} />
-        {/*<Route path='/todo/edit/:id' component={Todo} />*/}
+        <Route path='/todo/edit/:id' component={TodoEdit} />
         <Route path='/counter' component={Counter} />
         <Route path='/fetch-data' component={FetchData} />
       </Layout>

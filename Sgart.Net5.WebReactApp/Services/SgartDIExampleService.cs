@@ -24,10 +24,10 @@ namespace Sgart.Net5.WebReactApp.Services
             _context = context;
             _settings = settings;
         }
-        
+
         /* implementare i metodi necessari */
 
-        public async Task<List<TodoDTO>> GetTodoAllAsync()
+        public async Task<List<TodoDTO>> GetAllAsync()
         {
             _logger.LogDebug($"GetTodosAsync starting...");
 
@@ -38,7 +38,8 @@ namespace Sgart.Net5.WebReactApp.Services
                 {
                     TodoId = item.TodoId,
                     Message = item.DataJson.Text,
-                    Completed = item.DataJson.Completed
+                    Completed = item.DataJson.Completed,
+                    Modified = item.Modified
                 }).ToListAsync();
 
             //var items = await _context.Todos.AsNoTracking()
@@ -57,7 +58,28 @@ namespace Sgart.Net5.WebReactApp.Services
             //return result;
         }
 
-        public async Task AddTodoAsync(TodoAddDTO data)
+        public async Task<TodoDTO> Get(int todoId)
+        {
+            _logger.LogDebug($"GetById starting...");
+
+            // .AsNoTracking() aumenta la velocità delle query di sola lettura
+            var item = await _context.Todos.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.TodoId == todoId);
+
+            if (item == null)
+                return null;
+
+            return new TodoDTO
+            {
+                TodoId = item.TodoId,
+                Message = item.DataJson.Text,
+                Completed = item.DataJson.Completed,
+                Modified = item.Modified
+            };
+        }
+
+
+        public async Task AddAsync(TodoAddDTO data)
         {
             _logger.LogDebug($"AddTodosAsync starting...");
 
@@ -77,13 +99,13 @@ namespace Sgart.Net5.WebReactApp.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> EditTodoAsync(TodoEditDTO data)
+        public async Task<bool> EditAsync(TodoEditDTO data)
         {
             _logger.LogDebug($"EditTodosAsync starting...");
 
             var item = await _context.Todos.FirstOrDefaultAsync(x => x.TodoId == data.TodoId);
 
-            if(item == null)
+            if (item == null)
             {
                 _logger.LogError($"Todo id {data.TodoId} not found");
                 return false;
@@ -96,7 +118,7 @@ namespace Sgart.Net5.WebReactApp.Services
             return true;
         }
 
-        public async Task<bool> DeleteTodoAsync(int todoId)
+        public async Task<bool> DeleteAsync(int todoId)
         {
             _logger.LogDebug($"EditTodosAsync starting...");
 

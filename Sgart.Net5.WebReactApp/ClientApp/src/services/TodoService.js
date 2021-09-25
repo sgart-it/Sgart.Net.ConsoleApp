@@ -2,11 +2,15 @@ import baseService from './BaseService'
 
 export class AppService {
 
-  async getTodo() {
+  async getAll() {
     return await baseService.fetchGet('api/todo');
   }
 
-  async saveTodo(todo) {
+  async get(todoId) {
+    return await baseService.fetchGet('api/todo/' + todoId);
+  }
+
+  async save(todo) {
     if (todo.todoId === undefined || todo.todoId === null || todo.todoId === 0) {
       //add
       return await baseService.fetchPost('api/todo', todo);
@@ -16,7 +20,7 @@ export class AppService {
     }
   }
 
-  async deleteTodo(todoId) {
+  async delete(todoId) {
     return await baseService.fetchDelete('api/todo?todoId=' + todoId);
   }
 }

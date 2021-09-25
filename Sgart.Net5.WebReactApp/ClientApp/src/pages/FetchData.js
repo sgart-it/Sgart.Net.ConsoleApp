@@ -44,7 +44,7 @@ export class FetchData extends Component {
 
   render() {
     let contents = this.state.loading
-      ? <Loading loading={this.state.loading} />
+      ? <Loading show={this.state.loading} />
       : FetchData.renderForecastsTable(this.state.forecasts);
 
     return (

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import appService from '../services/TodoService'
+import todoService from '../services/TodoService'
 import { Loading } from '../components/Loading';
 import { PageHeader } from '../components/PageHeader';
 import './Todo.css';
+import { event } from 'jquery';
 
 export class Todo extends Component {
   static displayName = Todo.name;
@@ -22,8 +23,24 @@ export class Todo extends Component {
     this.populateData();
   }
 
-  handleEdit() {
-  };
+  handleDelete = async (todoId, e) => {
+    e.preventDefault()
+
+    this.setState({
+      loading: true,
+      error: null
+    });
+
+    await todoService.delete(todoId);
+
+    this.setState({
+      loading: true,
+      error: null
+    });
+
+
+    this.populateData();
+  }
 
   static renderTable(items, handleEdit, handleDelete) {
     return (
@@ -33,6 +50,7 @@ export class Todo extends Component {
             <th>Id</th>
             <th>Messaggio</th>
             <th>Completato</th>
+            <th>Modificato il</th>
             <th></th>
           </tr>
         </thead>
@@ -41,11 +59,12 @@ export class Todo extends Component {
             <tr key={item.todoId}>
               <td>{item.todoId}</td>
               <td>{item.message}</td>
+              <td>{item.modified}</td>
               <td><div className={item.completed ? 'todo-completed' : ''}>{item.completed ? 'Si' : 'No'}</div></td>
               <td>
-                <Button variant="outline-light" size="sm" onClick={handleEdit}>Modifica</Button>
+                <Button variant="outline-light" size="sm" tag={Link} to={'/todo/edit/' + item.todoId}>Modifica</Button>
                 {' '}
-                <Button variant="outline-light" size="sm" onClick={handleDelete}>Cancella</Button>
+                <Button variant="outline-light" size="sm" onChange={(e) => this.handleDelete(item.todoId, e)}>Cancella</Button>
               </td>
             </tr>
           )}
@@ -56,7 +75,7 @@ export class Todo extends Component {
 
   render() {
     let contents = this.state.loading
-      ? <Loading loading={this.state.loading} />
+      ? <Loading show={this.state.loading} />
       : Todo.renderTable(this.state.items);
 
     return (
@@ -74,10 +93,10 @@ export class Todo extends Component {
       error: null
     });
 
-    const result = await appService.getTodo();;
+    const result = await todoService.getAll();
 
     this.setState({
-      items: result.status === 200 ? result.data : null,
+      items: result.ok === true ? result.data : null,
       loading: false,
       error: result.message
     });

@@ -1,8 +1,7 @@
 import React, { Component, useState } from 'react';
-import { Button, Form, FormGroup, Label, Input, CustomInput } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import appService from '../services/TodoService'
-import { Loading } from '../components/Loading';
+import todoService from '../services/TodoService'
+import { Button, Form, FormGroup, Label, Input, CustomInput, Alert, FormFeedback, Spinner } from 'reactstrap';
+import { Link, Redirect } from 'react-router-dom';
 import { PageHeader } from '../components/PageHeader';
 
 export class TodoAdd extends Component {
@@ -11,78 +10,82 @@ export class TodoAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      form: {
-        message: '',
-        completed: false
-      },
-      loading: true,
-      error: null
+      message: '',
+      completed: false,
+      loading: false,
+      error: null,
+      redirecUrl: null
     };
   }
 
-  componentDidMount() {
+  handleSubmit = async (e) => {
+    e.preventDefault()
+
+    this.setState({
+      loading: true,
+      error: null
+    });
+
+    const result = await todoService.save({
+      message: this.state.message,
+      completed: this.state.completed
+    });
+
+    const valid = result.ok === true;
+
+    this.setState({
+      loading: false,
+      error: result.message,
+      redirecUrl: valid ? '/todo' : null
+    });
+
   }
 
-
-  handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(e)
-
+  isMessageValid = () => {
+    return this.state.message !== null && this.state.message.length > 0;
   }
 
   isButtonEnabled = () => {
-    return this.loading === true;
+    return this.isMessageValid() && this.state.loading === false;
   }
 
 
   render() {
-    const { message, completed } = this.state;
+    if (this.state.redirecUrl != null) {
+      return (
+        <Redirect to={this.state.redirecUrl} />
+      );
+    }
+
+    const { message, completed, loading } = this.state;
 
     const contents = <Form onSubmit={this.handleSubmit}>
       <FormGroup>
-        <Label for="message">Messaggio</Label>
-        <Input type="text" value={message} onChange={(e) => this.setState({ form: { message: e.target.value } })} name="message" id="message" placeholder="" />
+        <Label for="message1">Messaggio</Label>
+        <Input type="text" value={message} onChange={(e) => this.setState({ message: e.target.value })} invalid={!this.isMessageValid()}
+          name="message1" id="message1" placeholder="" />
+        <FormFeedback invalid>Il messaggio non pu&ograve; essere vuoto</FormFeedback>
       </FormGroup>
-      <FormGroup check>
-        <CustomInput type="switch" id="exampleCustomSwitch" name="customSwitch" label="Completato"
-          value={completed} onChange={(e) => this.setState({ form: { completed: e.target.value } })} />
+      <FormGroup>
+        <CustomInput type="switch" id="completed1" name="completed1" label={completed === true ? 'Completato' : 'Da completare'}
+          value={completed} onChange={(e) => this.setState({ completed: e.target.checked })} />
       </FormGroup>
       <p></p>
-      <Button size="sm" disabled={!this.isButtonEnabled()}>Salva</Button>
+      <Button size="sm" disabled={!this.isButtonEnabled()}>Salva</Button> {loading === true && <Spinner color="secondary" />}
+      <span> </span>
       <Button variant="outline-light" size="sm" tag={Link} to='/todo'>Annulla</Button>
-      {message}
+
+      <p></p>
+      <Alert color="secondary">Debug only: Message={message} | Completed={completed.toString()}</Alert>
     </Form>;
 
     return (
       <div>
-        <PageHeader title='Todo' description='Aggiunta todo' message={this.state.error} />
+        <PageHeader title='Todo aggiungi' description='Esempio aggiunta item' message={this.state.error} />
         {contents}
       </div>
 
     );
   }
 
-  async populateData() {
-    this.setState({
-      loading: true,
-      error: null
-    });
-
-    const result = await appService.AddTodo();;
-
-    if (result.status === 200) {
-      this.setState({
-        items: result.data,
-        loading: false,
-        error: null
-      });
-    } else {
-      this.setState({
-        items: null,
-        loading: false,
-        error: result.message
-      });
-    }
-
-  }
 }

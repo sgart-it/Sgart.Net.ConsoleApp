@@ -11,5 +11,7 @@ namespace Sgart.Net5.ConsoleApp.BO.DTO
         public int TodoId { get; set; }
         public string Message { get; set; }
         public bool Completed { get; set; }
+
+        public DateTime Modified { get; set; }
     }
 }
