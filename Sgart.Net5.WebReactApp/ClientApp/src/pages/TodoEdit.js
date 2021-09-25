@@ -76,8 +76,8 @@ export class TodoEdit extends Component {
             checked={completed} onChange={(e) => this.setState({ completed: e.target.checked })} />
         </FormGroup>
         <div className='buttons-bar'>
-          <Button size="sm" disabled={!this.isButtonEnabled()}>Salva</Button>
-          <Button variant="outline-light" size="sm" tag={Link} to='/todo'>Annulla</Button>
+          <Button color="primary" size="sm" disabled={!this.isButtonEnabled()}>Salva</Button>
+          <Button color="secondary" size="sm" tag={Link} to='/todo'>Annulla</Button>
           <LoadingInline show={loading} />
         </div>
         <Alert color="secondary">Debug only: State={JSON.stringify(this.state)}</Alert>
@@ -96,7 +96,7 @@ export class TodoEdit extends Component {
 
     return (
       <div>
-        <PageHeader title={'Todo modifica id: ' + this.state.id} description='Esempio aggiunta item' message={this.state.error} />
+        <PageHeader title={'Todo modifica id: ' + this.state.id} description='Esempio modifica item' message={this.state.error} />
         {this.isIdValid()
           ? this.renderForm()
           : <Alert color="secondary">L'id non pu&ograve; essere nullo</Alert>

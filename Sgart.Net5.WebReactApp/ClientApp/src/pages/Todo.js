@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import todoService from '../services/TodoService'
 import { PageHeader } from '../components/PageHeader';
 import { DateTime } from '../components/DateTime';
+import { ModalYesNo } from '../components/ModalYesNo';
 import './Todo.css';
 
 export class Todo extends Component {
@@ -14,7 +15,8 @@ export class Todo extends Component {
     this.state = {
       items: [],
       loading: true,
-      error: null
+      error: null,
+      itemToDelete: 0
     };
   }
 
@@ -26,7 +28,13 @@ export class Todo extends Component {
     this.populateData();
   }
 
-  handleDelete = async (todoId, e) => {
+  handleShowDelete = async (todoId, e) => {
+    this.setState({
+      itemToDelete: todoId
+    });
+  }
+
+  handleDelete = async (confirm, e) => {
     e.preventDefault()
 
     this.setState({
@@ -34,11 +42,15 @@ export class Todo extends Component {
       error: null
     });
 
-    await todoService.delete(todoId);
+    const todoId = this.state.itemToDelete;
+
+    if (confirm === true && todoId !== 0)
+      await todoService.delete(todoId);
 
     this.setState({
       loading: true,
-      error: null
+      error: null,
+      itemToDelete: 0
     });
 
 
@@ -46,7 +58,7 @@ export class Todo extends Component {
   }
 
   // questo metodo è statico quindi non posso usare this, ma devo passargli gli oggetti che mi servono
-  static renderTable(items, handleDelete) {
+  static renderTable(items, handleShowDelete) {
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
@@ -66,9 +78,9 @@ export class Todo extends Component {
               <td><div className={item.completed ? 'todo-completed' : ''}>{item.completed ? 'Si' : 'No'}</div></td>
               <td><DateTime date={item.modified} /></td>
               <td>
-                <Button variant="outline-light" size="sm" tag={Link} to={'/todo/edit/' + item.todoId}>Modifica</Button>
+                <Button color="primary" size="sm" tag={Link} to={'/todo/edit/' + item.todoId}>Modifica</Button>
                 {' ' /* attenzione il Button usa l'evento onClick non onChange */}
-                <Button variant="outline-light" size="sm" onClick={(e) => handleDelete(item.todoId, e)}>Cancella</Button>
+                <Button color="secondary" size="sm" onClick={(e) => handleShowDelete(item.todoId, e)}>Cancella</Button>
               </td>
             </tr>
           )}
@@ -78,18 +90,20 @@ export class Todo extends Component {
   }
 
   render() {
-    let contents = Todo.renderTable(this.state.items, this.handleDelete);
+    let contents = Todo.renderTable(this.state.items, this.handleShowDelete);
 
     return (
       <div>
         <PageHeader title='Todo' description='Esempio lettura API in React' message={this.state.error} />
         <div className='buttons-bar'>
-          <Button variant="outline-light" size="sm" tag={Link} to='/todo/add'>Aggiungi</Button>
+          <Button color="primary" size="sm" tag={Link} to='/todo/add'>Aggiungi</Button>
 
-          <Button variant="outline-light" size="sm" onClick={this.handleRefresh}>Aggiorna</Button>
+          <Button color="secondary" size="sm" onClick={this.handleRefresh}>Aggiorna</Button>
           {this.state.loading === true && <Spinner color="secondary" />}
         </div>
         {contents}
+        {/* madal di conferma cancellazione */}
+        <ModalYesNo show={this.state.itemToDelete !== 0} onClick={this.handleDelete} title='Delete' body={`Vuoi cancellare l'item con id ${this.state.itemToDelete} ?`} />
       </div>
     );
   }

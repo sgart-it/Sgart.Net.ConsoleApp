@@ -77,8 +77,8 @@ export class TodoAdd extends Component {
           checked={completed} onChange={(e) => this.setState({ completed: e.target.checked })} />
       </FormGroup>
       <div className='buttons-bar'>
-        <Button size="sm" disabled={!this.isButtonEnabled()}>Salva</Button>
-        <Button variant="outline-light" size="sm" tag={Link} to='/todo'>Annulla</Button>
+        <Button color="primary" size="sm" disabled={!this.isButtonEnabled()}>Salva</Button>
+        <Button color="secondary" size="sm" tag={Link} to='/todo'>Annulla</Button>
         <LoadingInline show={ loading } />
       </div>
       <Alert color="secondary">Debug only: Message={message} | Completed={completed.toString()}</Alert>
