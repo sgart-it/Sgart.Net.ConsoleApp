@@ -99,7 +99,7 @@ export class Todo extends Component {
           <Button color="primary" size="sm" tag={Link} to='/todo/add'>Aggiungi</Button>
 
           <Button color="secondary" size="sm" onClick={this.handleRefresh}>Aggiorna</Button>
-          {this.state.loading === true && <Spinner color="secondary" children={ false } />}
+          {this.state.loading === true && <Spinner color="secondary" />}
         </div>
         {contents}
         {/* modal di conferma cancellazione */}

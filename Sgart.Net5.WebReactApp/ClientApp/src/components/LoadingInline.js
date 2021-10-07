@@ -6,7 +6,7 @@ export class LoadingInline extends Component {
 
   render() {
     return (
-      this.props.show === true && <Spinner size="sm" color="secondary" children={false} />
+      this.props.show === true && <Spinner size="sm" color="secondary" />
     );
   }
 }
