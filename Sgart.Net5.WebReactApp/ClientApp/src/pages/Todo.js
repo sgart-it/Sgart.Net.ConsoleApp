@@ -99,10 +99,10 @@ export class Todo extends Component {
           <Button color="primary" size="sm" tag={Link} to='/todo/add'>Aggiungi</Button>
 
           <Button color="secondary" size="sm" onClick={this.handleRefresh}>Aggiorna</Button>
-          {this.state.loading === true && <Spinner color="secondary" />}
+          {this.state.loading === true && <Spinner color="secondary" children={ false } />}
         </div>
         {contents}
-        {/* madal di conferma cancellazione */}
+        {/* modal di conferma cancellazione */}
         <ModalYesNo show={this.state.itemToDelete !== 0} onClick={this.handleDelete} title='Delete' body={`Vuoi cancellare l'item con id ${this.state.itemToDelete} ?`} />
       </div>
     );
