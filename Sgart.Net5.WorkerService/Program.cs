@@ -47,7 +47,10 @@ namespace Sgart.Net5.WorkerService
             catch (Exception ex)
             {
                 logger.Error(ex, "Stopped unknow exception");
-                return -1;
+                // scrivo anche in console nel caso il log non funzionasse
+                // in modo da evidenziare eventuali errori non gestiti
+                Console.WriteLine(ex);
+                throw;
             }
             finally
             {
