@@ -26,6 +26,7 @@ namespace Sgart.Net5.WebReactApp
         {
             services.AddSingleton(Configuration.GetSection("Settings").Get<AppSettings>());
 
+            // registro EF DB context
             services.AddDbContext<SgartDbContext>(options =>
             {
                 options.UseSqlServer(

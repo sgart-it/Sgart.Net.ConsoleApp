@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sgart.Net5.WebReactApp.Models
+namespace Sgart.Net5.WorkerService.Models
 {
     /// <summary>
     /// classe di mapping delle proprietà presenti in appsettings.json\Settings
     /// </summary>
     public class AppSettings
     {
-        public string OptionA { get; set; }
-
-        public bool OptionB { get; set; }
+        public int WorkerPauseSeconds { get; set; }
     }
 }

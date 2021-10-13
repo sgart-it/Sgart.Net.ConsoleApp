@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Sgart.Net5.ConsoleApp.Models
 {
     /// <summary>
-    /// calsse di mapping delle proprietà presenti in appsettings.json\Settings
+    /// classe di mapping delle proprietà presenti in appsettings.json\Settings
     /// </summary>
     public class AppSettings
     {

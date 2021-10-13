@@ -3,7 +3,6 @@ using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.EventLog;
 using System.Threading.Tasks;
 using NLog.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
@@ -83,6 +82,7 @@ namespace Sgart.Net5.ConsoleApp
 
                     services.AddSingleton(configuration.GetSection("Settings").Get<AppSettings>());
 
+                    // registro EF DB context
                     services.AddDbContext<SgartDbContext>(options =>
                     {
                         options.UseSqlServer(
