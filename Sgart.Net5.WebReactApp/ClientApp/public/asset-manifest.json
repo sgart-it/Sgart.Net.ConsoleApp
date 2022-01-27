@@ -1,0 +1,13 @@
+{
+  "files": {
+    "index.html": "/index.html",
+    "service-worker.js": "/service-worker.js",
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ce82fbe9.js",
+    "static/css/2.d5e620ed.chunk.css",
+    "static/js/2.f31b4171.chunk.js",
+    "static/css/main.92a03e90.chunk.css",
+    "static/js/main.f410816e.chunk.js"
+  ]
+}
