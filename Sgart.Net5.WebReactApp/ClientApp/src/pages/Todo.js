@@ -28,6 +28,10 @@ export class Todo extends Component {
     this.populateData();
   }
 
+  handleExport = () => {
+    window.location.assign("/api/todo/excel?t=" + (new Date()).getTime().toString());
+  }
+
   handleShowDelete = async (todoId, e) => {
     this.setState({
       itemToDelete: todoId
@@ -100,6 +104,8 @@ export class Todo extends Component {
 
           <Button color="secondary" size="sm" onClick={this.handleRefresh}>Aggiorna</Button>
           {this.state.loading === true && <Spinner color="secondary" />}
+
+          <Button color="secondary" size="sm" onClick={this.handleExport}>Export</Button>
         </div>
         {contents}
         {/* modal di conferma cancellazione */}

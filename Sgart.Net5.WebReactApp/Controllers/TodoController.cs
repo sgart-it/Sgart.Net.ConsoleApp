@@ -5,6 +5,7 @@ using Sgart.Net5.ConsoleApp.BO.InputDTO;
 using Sgart.Net5.WebReactApp.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -36,6 +37,35 @@ namespace Sgart.Net5.WebReactApp.Controllers
 
             return Ok(await _service.GetAllAsync());
         }
+
+        [HttpGet]
+        [Route("excel")]
+        public async Task<IActionResult> GetExcel()
+        {
+            _logger.LogTrace("Get Excel");
+            try
+            {
+                var mem = new MemoryStream();
+
+                string fileName = await _service.GetExcel(mem);
+
+                mem.Position = 0;
+
+                return new FileStreamResult(mem, SimpleExcelService.CONTENT_TYPE)
+                {
+                    FileDownloadName = fileName,
+                    LastModified = DateTime.Now
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Excel");
+
+                return BadRequest();
+            }
+        }
+
+
 
         /// <summary>
         /// ritorna tutti gli elementi della tabella

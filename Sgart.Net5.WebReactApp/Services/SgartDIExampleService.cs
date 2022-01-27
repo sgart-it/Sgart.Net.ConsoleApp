@@ -67,6 +67,38 @@ namespace Sgart.Net5.WebReactApp.Services
             //return result;
         }
 
+        public async Task<string> GetExcel(System.IO.Stream strm)
+        {
+            string fileName = $"Sgart_todo_excel_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.{SimpleExcelService.FILE_EXTENSION}";
+            _logger.LogTrace($"Excel nema: {fileName}");
+
+            var items = await GetAllAsync();
+
+            using (var xls = new SimpleExcelService(strm))
+            {
+                xls.AddSheet("Todo");
+
+                xls.AddHeaders(new List<string> { "Id", "Messaggio", "Completato", "Modificato il" });
+
+                foreach (var item in items)
+                {
+                    // creo la riga 
+                    xls.NewRow();
+
+                    // aggiungo i volori delle celle
+                    xls.AddCell(item.TodoId);
+                    xls.AddCell(item.Message);
+                    xls.AddCell(item.Completed);
+                    xls.AddCell(item.Modified);
+
+                    // aggiungo la riga all'excel
+                    xls.AddRow();
+                }
+            }
+            return fileName;
+        }
+
+
         public async Task<TodoDTO> Get(int todoId)
         {
             _logger.LogDebug($"GetById starting...");

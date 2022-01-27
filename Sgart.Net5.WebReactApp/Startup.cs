@@ -38,6 +38,8 @@ namespace Sgart.Net5.WebReactApp
 
             // registro la classe che usera tramite dependency injection
             services.AddTransient<SgartDIExampleService>();
+            services.AddTransient<SimpleExcelService>();
+            services.AddTransient<ExportService>();
 
             services.AddControllersWithViews();
 

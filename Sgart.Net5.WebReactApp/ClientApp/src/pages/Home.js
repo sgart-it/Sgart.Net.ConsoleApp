@@ -14,6 +14,9 @@ export class Home extends Component {
           description='Esempio lettura API in React'/>
         <hr />
         <Button variant="outline-light" size="sm" tag={Link} to={'/todo/'}>Vai all'esempio Todo</Button>
+        <span> </span>
+        <a href="/api/export/excel" target="_blank">Demo download Excel</a>
+
         <hr />
         <p>Welcome to your new single-page application, built with:</p>
         <ul>
