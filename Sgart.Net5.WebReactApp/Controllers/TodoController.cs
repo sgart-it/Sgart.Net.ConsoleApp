@@ -51,11 +51,16 @@ namespace Sgart.Net5.WebReactApp.Controllers
 
                 mem.Position = 0;
 
-                return new FileStreamResult(mem, SimpleExcelService.CONTENT_TYPE)
+                System.Net.Mime.ContentDisposition cd = new System.Net.Mime.ContentDisposition
                 {
-                    FileDownloadName = fileName,
-                    LastModified = DateTime.Now
+                    FileName = fileName,
+                    Inline = true,
+                    CreationDate = DateTime.Now                    
                 };
+                Response.Headers.Add("Content-Disposition", cd.ToString());
+                Response.Headers.Add("X-Content-Type-Options", "nosniff");
+
+                return new FileStreamResult(mem, SimpleExcelService.CONTENT_TYPE);
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,11 +17,14 @@ namespace Sgart.Net5.WebReactApp.Services
     public class SimpleExcelService : IDisposable
     {
         private readonly ILogger<SimpleExcelService> _logger;
+        private readonly System.Globalization.CultureInfo _ciEN;
 
         public SimpleExcelService(ILogger<SimpleExcelService> logger)
         {
             _logger = logger;
             _logger.LogTrace("Export Excel");
+            _ciEN = new System.Globalization.CultureInfo("en-US");
+
         }
 
         public const string CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -32,6 +36,9 @@ namespace Sgart.Net5.WebReactApp.Services
         private Row _row;
         private int _rowNumber = 1;
         private int _cellNumber = 1;
+
+        private int _styleFormatDate = 0;
+        private int _styleFormatDateTime = 0;
 
         public SimpleExcelService(string fileName)
         {
@@ -52,6 +59,130 @@ namespace Sgart.Net5.WebReactApp.Services
             {
                 Sheets = new Sheets()
             };
+
+            // Add Stylesheet.
+            var workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
+            var stylesheet = new Stylesheet();
+            workbookStylesPart.Stylesheet = GetStylesheet();
+            workbookStylesPart.Stylesheet.Save();
+        }
+
+        private Stylesheet GetStylesheet()
+        {
+            //https://stackoverflow.com/questions/7089745/openxml-writing-a-date-into-excel-spreadsheet-results-in-unreadable-content/31829959#31829959
+            var styleSheet = new Stylesheet();
+
+            // Create "fonts" node.
+            var fonts = new Fonts();
+            fonts.Append(new Font()
+            {
+                FontName = new FontName() { Val = "Calibri" },
+                FontSize = new FontSize() { Val = 11 },
+                FontFamilyNumbering = new FontFamilyNumbering() { Val = 2 },
+            });
+
+            fonts.Count = (uint)fonts.ChildElements.Count;
+
+            // Create "fills" node.
+            var fills = new Fills();
+            fills.Append(new Fill()
+            {
+                PatternFill = new PatternFill() { PatternType = PatternValues.None }
+            });
+            fills.Append(new Fill()
+            {
+                PatternFill = new PatternFill() { PatternType = PatternValues.Gray125 }
+            });
+
+            fills.Count = (uint)fills.ChildElements.Count;
+
+            // Create "borders" node.
+            var borders = new Borders();
+            borders.Append(new Border()
+            {
+                LeftBorder = new LeftBorder(),
+                RightBorder = new RightBorder(),
+                TopBorder = new TopBorder(),
+                BottomBorder = new BottomBorder(),
+                DiagonalBorder = new DiagonalBorder()
+            });
+            borders.Count = (uint)borders.ChildElements.Count;
+
+            // Create "cellStyleXfs" node.
+            var cellStyleFormats = new CellStyleFormats();
+            cellStyleFormats.Append(new CellFormat()
+            {
+                NumberFormatId = 0,
+                FontId = 0,
+                FillId = 0,
+                BorderId = 0
+            });
+
+            cellStyleFormats.Count = (uint)cellStyleFormats.ChildElements.Count;
+
+            // Create "cellXfs" node.
+            var cellFormats = new CellFormats();
+
+            // A default style that works for everything but DateTime
+            cellFormats.Append(new CellFormat()
+            {
+                BorderId = 0,
+                FillId = 0,
+                FontId = 0,
+                NumberFormatId = 0,
+                FormatId = 0,
+                ApplyNumberFormat = true
+            });
+
+            // Date only
+            cellFormats.Append(new CellFormat()
+            {
+                BorderId = 0,
+                FillId = 0,
+                FontId = 0,
+                NumberFormatId = 14,    // Date only
+                FormatId = 0,
+                ApplyNumberFormat = true
+            });
+
+            cellFormats.Count = (uint)cellFormats.ChildElements.Count;
+
+            _styleFormatDate = cellFormats.ChildElements.Count - 1;
+
+            // Date + Time
+            cellFormats.Append(new CellFormat()
+            {
+                BorderId = 0,
+                FillId = 0,
+                FontId = 0,
+                NumberFormatId = 22,    // Date + Time
+                FormatId = 0,
+                ApplyNumberFormat = true
+            });
+
+            cellFormats.Count = (uint)cellFormats.ChildElements.Count;
+
+            _styleFormatDateTime = cellFormats.ChildElements.Count - 1;
+
+            // Create "cellStyles" node.
+            var cellStyles = new CellStyles();
+            cellStyles.Append(new CellStyle()
+            {
+                Name = "Normal",
+                FormatId = 0,
+                BuiltinId = 0
+            });
+            cellStyles.Count = (uint)cellStyles.ChildElements.Count;
+
+            // aggiungo tutti nodi in ordine
+            styleSheet.Append(fonts);
+            styleSheet.Append(fills);
+            styleSheet.Append(borders);
+            styleSheet.Append(cellStyleFormats);
+            styleSheet.Append(cellFormats);
+            styleSheet.Append(cellStyles);
+
+            return styleSheet;
         }
 
         /// <summary>
@@ -222,11 +353,12 @@ namespace Sgart.Net5.WebReactApp.Services
         /// TODO. non funzionna bene da sistemare
         /// </summary>
         /// <param name="value"></param>
-        public string AddCell(DateTime value)
+        public string AddCell(DateTime value, bool showTime = false)
         {
             var cell = NewCell(CellValues.Date);
-            cell.CellValue = new CellValue(value.ToString("s"));
-            //cell.StyleIndex = 1;
+            double oaValue = value.ToOADate();
+            cell.CellValue = new CellValue(oaValue.ToString(_ciEN));
+            cell.StyleIndex = Convert.ToUInt32(showTime ? _styleFormatDateTime : _styleFormatDate);
             return AddrowInternal(cell);
         }
 
@@ -234,13 +366,15 @@ namespace Sgart.Net5.WebReactApp.Services
         /// aggiunge, ad una riga, una cella di tipo DateTime nullable
         /// </summary>
         /// <param name="value"></param>
-        public string AddCell(DateTime? value)
+        public string AddCell(DateTime? value, bool showTime = false)
         {
             var cell = NewCell(CellValues.Date);
             if (value.HasValue)
             {
-                cell.CellValue = new CellValue(value.Value.ToOADate());
+                double oaValue = value.Value.ToOADate();
+                cell.CellValue = new CellValue(oaValue.ToString(_ciEN));
             }
+            cell.StyleIndex = Convert.ToUInt32(showTime ? _styleFormatDateTime : _styleFormatDate);
             return AddrowInternal(cell);
         }
 

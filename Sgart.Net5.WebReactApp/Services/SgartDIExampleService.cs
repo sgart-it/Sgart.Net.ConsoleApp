@@ -89,7 +89,7 @@ namespace Sgart.Net5.WebReactApp.Services
                     xls.AddCell(item.TodoId);
                     xls.AddCell(item.Message);
                     xls.AddCell(item.Completed);
-                    xls.AddCell(item.Modified);
+                    xls.AddCell(item.Modified, true);
 
                     // aggiungo la riga all'excel
                     xls.AddRow();
