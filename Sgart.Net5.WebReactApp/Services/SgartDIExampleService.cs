@@ -18,12 +18,13 @@ namespace Sgart.Net5.WebReactApp.Services
         private readonly ILogger<SgartDIExampleService> _logger;
         private readonly SgartDbContext _context;
         private readonly AppSettings _settings;
-
-        public SgartDIExampleService(ILogger<SgartDIExampleService> logger, SgartDbContext context, AppSettings settings)
+        private readonly SimpleExcelService _excelService;
+        public SgartDIExampleService(ILogger<SgartDIExampleService> logger, SgartDbContext context, AppSettings settings, SimpleExcelService excelService)
         {
             _logger = logger;
             _context = context;
             _settings = settings;
+            _excelService = excelService;
         }
 
         /* implementare i metodi necessari */
@@ -74,27 +75,29 @@ namespace Sgart.Net5.WebReactApp.Services
 
             var items = await GetAllAsync();
 
-            using (var xls = new SimpleExcelService(strm))
+            _excelService.Create(strm);
+
+            _excelService.AddSheet("Todo");
+
+            _excelService.AddHeaders(new List<string> { "Id", "Messaggio", "Completato", "Modificato il" });
+
+            foreach (var item in items)
             {
-                xls.AddSheet("Todo");
+                // creo la riga 
+                _excelService.NewRow();
 
-                xls.AddHeaders(new List<string> { "Id", "Messaggio", "Completato", "Modificato il" });
+                // aggiungo i volori delle celle
+                _excelService.AddCell(item.TodoId);
+                _excelService.AddCell(item.Message);
+                _excelService.AddCell(item.Completed);
+                _excelService.AddCell(item.Modified, true);
 
-                foreach (var item in items)
-                {
-                    // creo la riga 
-                    xls.NewRow();
+                // aggiungo la riga all'excel
+                _excelService.AddRow();
 
-                    // aggiungo i volori delle celle
-                    xls.AddCell(item.TodoId);
-                    xls.AddCell(item.Message);
-                    xls.AddCell(item.Completed);
-                    xls.AddCell(item.Modified, true);
-
-                    // aggiungo la riga all'excel
-                    xls.AddRow();
-                }
             }
+            _excelService.Close();
+
             return fileName;
         }
 

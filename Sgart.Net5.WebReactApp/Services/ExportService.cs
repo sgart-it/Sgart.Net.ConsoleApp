@@ -11,12 +11,12 @@ namespace Sgart.Net5.WebReactApp.Services
     public class ExportService
     {
         private readonly ILogger<ExportService> _logger;
-        private readonly SimpleExcelService _service;
+        private readonly SimpleExcelService _excelService;
 
-        public ExportService(ILogger<ExportService> logger, SimpleExcelService service)
+        public ExportService(ILogger<ExportService> logger, SimpleExcelService excelService)
         {
             _logger = logger;
-            _service = service;
+            _excelService = excelService;
 
             _logger.LogTrace("Export service");
         }
@@ -39,28 +39,30 @@ namespace Sgart.Net5.WebReactApp.Services
 
             var items = await GetMockData();
 
-            using (var xls = new SimpleExcelService(strm))
+            _excelService.Create(strm);
+
+            _excelService.AddSheet("Sheet 1");
+
+            _excelService.AddHeaders(new List<string> { "Id", "Title", "Value", "Date", "Value x 10" });
+
+            foreach (var item in items)
             {
-                xls.AddSheet("Sheet 1");
+                // creo la riga 
+                var rowNumber = _excelService.NewRow();
 
-                xls.AddHeaders(new List<string> { "Id", "Title", "Value", "Date", "Value x 10" });
+                // aggiungo i volori delle celle
+                _excelService.AddCell(item.ID);
+                _excelService.AddCell(item.Title);
+                var lettValue = _excelService.AddCell(item.Value);
+                _excelService.AddCell(item.Date);
+                _excelService.AddCellFormula($"{lettValue}{rowNumber}*10");
 
-                foreach (var item in items)
-                {
-                    // creo la riga 
-                    var rowNumber = xls.NewRow();
-
-                    // aggiungo i volori delle celle
-                    xls.AddCell(item.ID);
-                    xls.AddCell(item.Title);
-                    var lettValue = xls.AddCell(item.Value);
-                    xls.AddCell(item.Date);
-                    xls.AddCellFormula($"{lettValue}{rowNumber}*10");
-
-                    // aggiungo la riga all'excel
-                    xls.AddRow();
-                }
+                // aggiungo la riga all'excel
+                _excelService.AddRow();
             }
+
+            _excelService.Close();
+
             return fileName;
         }
     }

@@ -51,7 +51,7 @@ namespace Sgart.Net5.WebReactApp.Controllers
 
                 mem.Position = 0;
 
-                System.Net.Mime.ContentDisposition cd = new System.Net.Mime.ContentDisposition
+                var cd = new System.Net.Mime.ContentDisposition
                 {
                     FileName = fileName,
                     Inline = true,
