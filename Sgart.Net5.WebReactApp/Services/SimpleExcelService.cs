@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Sgart.Net5.WebReactApp.Services
 {
     /// <summary>
-    /// Crea un file excel base per l'esport dei dati in forma tabellare
+    /// Crea un file excel base per l'export dei dati in forma tabellare
     /// si può aggiungere un header e supporta date e numeri
     /// richiede il pacchetto NuGet DocumentFormat.OpenXml Version="2.15.0"
     /// </summary>
@@ -32,11 +32,23 @@ namespace Sgart.Net5.WebReactApp.Services
         private int _styleFormatDate = 0;
         private int _styleFormatDateTime = 0;
 
+        /// <summary>
+        /// usato per la DI
+        /// </summary>
+        /// <param name="logger"></param>
         public SimpleExcelService(ILogger<SimpleExcelService> logger)
         {
             _logger = logger;
             _logger.LogTrace("Export Excel");
         }
+
+        /// <summary>
+        /// usato se richiamato direttamente senza logger
+        /// </summary>
+        public SimpleExcelService()
+        {
+        }
+
 
         /// <summary>
         /// inizializza un nuovo documento/package
