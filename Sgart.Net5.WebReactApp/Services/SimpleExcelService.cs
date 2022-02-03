@@ -382,7 +382,6 @@ namespace Sgart.Net5.WebReactApp.Services
 
         /// <summary>
         /// aggiunge, ad una riga, una cella di tipo DateTime
-        /// TODO. non funzionna bene da sistemare
         /// </summary>
         /// <param name="value"></param>
         public string AddCell(DateTime value, bool showTime = false)
