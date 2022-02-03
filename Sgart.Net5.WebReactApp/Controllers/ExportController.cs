@@ -47,6 +47,32 @@ namespace Sgart.Net5.WebReactApp.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("excel2007")]
+        public async Task<IActionResult> Excel2007()
+        {
+            try
+            {
+                var mem = new MemoryStream();
+
+                string fileName = await _service.GetExcel(mem, true);
+
+                mem.Position = 0;
+
+                return new FileStreamResult(mem, SimpleExcelService.CONTENT_TYPE)
+                {
+                    FileDownloadName = fileName,
+                    LastModified = DateTime.Now
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Excel");
+
+                return BadRequest();
+            }
+        }
+
 
         /// <summary>
         /// demo salvataggio in locale

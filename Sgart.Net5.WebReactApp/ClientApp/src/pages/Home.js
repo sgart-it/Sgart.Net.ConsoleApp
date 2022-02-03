@@ -15,7 +15,9 @@ export class Home extends Component {
         <hr />
         <Button variant="outline-light" size="sm" tag={Link} to={'/todo/'}>Vai all'esempio Todo</Button>
         <span> </span>
-        <a href="/api/export/excel" target="_blank">Demo download Excel</a>
+        <a href="/api/export/excel" target="_blank">Demo download Excel (2010+)</a>
+        <span> </span>
+        <a href="/api/export/excel2007" target="_blank">Demo download Excel (2003/2007)</a>
 
         <hr />
         <p>Welcome to your new single-page application, built with:</p>

@@ -32,7 +32,7 @@ namespace Sgart.Net5.WebReactApp.Services
             return items;
         }
 
-        public async Task<string> GetExcel(Stream strm)
+        public async Task<string> GetExcel(Stream strm, bool dateformat2007 = false)
         {
             string fileName = $"Sgart_demo_export_excel_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.{SimpleExcelService.FILE_EXTENSION}";
             _logger.LogTrace($"Excel nema: {fileName}");
@@ -40,6 +40,8 @@ namespace Sgart.Net5.WebReactApp.Services
             var items = await GetMockData();
 
             _excelService.Create(strm);
+
+            _excelService.Dateformat2007 = dateformat2007;
 
             _excelService.AddSheet("Sheet 1");
 

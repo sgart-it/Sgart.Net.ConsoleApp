@@ -29,6 +29,7 @@ namespace Sgart.Net5.WebReactApp.Services
         private int _rowNumber = 1;
         private int _cellNumber = 1;
 
+        // stili grafici
         private int _styleFormatDate = 0;
         private int _styleFormatDateTime = 0;
 
@@ -92,6 +93,11 @@ namespace Sgart.Net5.WebReactApp.Services
             workbookStylesPart.Stylesheet = GetStylesheet();
             workbookStylesPart.Stylesheet.Save();
         }
+
+        /// <summary>
+        /// abilita il formato date per office 2003/7
+        /// </summary>
+        public bool Dateformat2007 { get; set; }
 
         private Stylesheet GetStylesheet()
         {
@@ -382,8 +388,15 @@ namespace Sgart.Net5.WebReactApp.Services
         public string AddCell(DateTime value, bool showTime = false)
         {
             var cell = NewCell(CellValues.Date);
-            double oaValue = value.ToOADate();
-            cell.CellValue = new CellValue(oaValue.ToString(_ciEN));
+            if (Dateformat2007)
+            {
+                double oaValue = value.ToOADate();
+                cell.CellValue = new CellValue(oaValue.ToString(_ciEN));
+            }
+            else
+            {
+                cell.CellValue = new CellValue(value.ToString("s"));
+            }
             cell.StyleIndex = Convert.ToUInt32(showTime ? _styleFormatDateTime : _styleFormatDate);
             return AddrowInternal(cell);
         }
@@ -397,8 +410,15 @@ namespace Sgart.Net5.WebReactApp.Services
             var cell = NewCell(CellValues.Date);
             if (value.HasValue)
             {
-                double oaValue = value.Value.ToOADate();
-                cell.CellValue = new CellValue(oaValue.ToString(_ciEN));
+                if (Dateformat2007)
+                {
+                    double oaValue = value.Value.ToOADate();
+                    cell.CellValue = new CellValue(oaValue.ToString(_ciEN));
+                }
+                else
+                {
+                    cell.CellValue = new CellValue(value.Value.ToString("s"));
+                }
             }
             cell.StyleIndex = Convert.ToUInt32(showTime ? _styleFormatDateTime : _styleFormatDate);
             return AddrowInternal(cell);
