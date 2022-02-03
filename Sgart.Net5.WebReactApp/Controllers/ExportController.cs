@@ -25,6 +25,7 @@ namespace Sgart.Net5.WebReactApp.Controllers
         [Route("excel")]
         public async Task<IActionResult> Excel()
         {
+            _logger.LogInformation("Excel");
             try
             {
                 var mem = new MemoryStream();
@@ -51,6 +52,7 @@ namespace Sgart.Net5.WebReactApp.Controllers
         [Route("excel2007")]
         public async Task<IActionResult> Excel2007()
         {
+            _logger.LogInformation("Excel2007");
             try
             {
                 var mem = new MemoryStream();
@@ -80,6 +82,7 @@ namespace Sgart.Net5.WebReactApp.Controllers
         /// <returns></returns>
         public async Task<ActionResult<bool>> ExcelSaveLocaly()
         {
+            _logger.LogInformation("ExcelSaveLocaly");
             try
             {
                 // using (var xls = new ExcelSimpleExport(@"c:\temp\provaX2.xlsx"))

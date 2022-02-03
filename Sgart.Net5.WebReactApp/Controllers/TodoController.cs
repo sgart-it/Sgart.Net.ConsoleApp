@@ -55,7 +55,7 @@ namespace Sgart.Net5.WebReactApp.Controllers
                 {
                     FileName = fileName,
                     Inline = true,
-                    CreationDate = DateTime.Now                    
+                    CreationDate = DateTime.Now
                 };
                 Response.Headers.Add("Content-Disposition", cd.ToString());
                 Response.Headers.Add("X-Content-Type-Options", "nosniff");
