@@ -1,10 +1,12 @@
 ﻿# Esempio di servizio windows in .NET 5
+
 In debug può essere eseguito senza installazione semplicemente premendo F5
 
 ATTENZIONE eseguire prima Sgart.Net5.ConsoleApp per creare il DB
 
 
 ## registrare il servizio
+
 I seguenti comandi servono per registrare l'applicativo come servizio windows, da eseguire con elevati privilegi.
 
 Attenzione il comando "sc" funziona solo in CMD non in PowerShell
@@ -12,19 +14,24 @@ Attenzione il comando "sc" funziona solo in CMD non in PowerShell
 ATTENZIONE il servizio di default viene installato con l'utnete NT AUTHORITY\SYSTEM, configurarlo con l'utente corretto
 
 ## installazione
+
 sc create "SgartNet5WorkerService" DisplayName="Sgart Demo Service" binPath="C:\Temp\Sgart.Net5.ConsoleApp\Sgart.Net5.WorkerService\bin\Release\net5.0\publish\Sgart.Net5.WorkerService.exe"
 sc description SgartNet5WorkerService "Sgart.it servizio demo in .NET 5"
 
 ### avvio
+
 sc start "SgartNet5WorkerService"
 
 ### arresto
+
 sc stop "SgartNet5WorkerService"
 
 ### rimozione
+
 sc delete "SgartNet5WorkerService"
 
 ### verifica configurazione
+
 sc qc SgartNet5WorkerService
 
 esempio di output
@@ -42,6 +49,7 @@ SERVICE_NAME: SgartNet5WorkerService
         SERVICE_START_NAME : LocalSystem
 
 ### PowerShell
+
 I comandi PowerShell equivalenti sono 
 
 sc create => New-Service 
