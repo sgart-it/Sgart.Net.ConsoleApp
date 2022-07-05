@@ -10,7 +10,7 @@ export class Home extends Component {
     return (
       <div>
         <PageHeader
-          title='Demo Web application .Net 5 + EF + Nlog + React + WebAPI'
+          title='Demo Web application .Net 6 + EF 6 + Nlog + React + WebAPI'
           description='Esempio lettura API in React'/>
         <hr />
         <Button variant="outline-light" size="sm" tag={Link} to={'/todo/'}>Vai all'esempio Todo</Button>
