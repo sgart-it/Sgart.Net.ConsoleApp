@@ -1,6 +1,6 @@
 # Sgart.Net.ConsoleApp.Data
 
-Class library con con la configurazione di EF Core 5 e le migrations
+Class library con con la configurazione di EF Core 6 e le migrations
 
 # Migration
 
