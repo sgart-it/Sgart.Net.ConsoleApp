@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <UserSecretsId>dotnet-Sgart.Net5.WorkerService-04139A31-E279-4EE6-824C-F32A69CF2527</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.0" />
+        <PackageReference Include="NLog" Version="5.0.1" />
+        <PackageReference Include="NLog.Extensions.Logging" Version="5.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Sgart.Net.ConsoleApp.BO\Sgart.Net.ConsoleApp.BO.csproj" />
+      <ProjectReference Include="..\Sgart.Net.ConsoleApp.Data\Sgart.Net.ConsoleApp.Data.csproj" />
+    </ItemGroup>
+</Project>
