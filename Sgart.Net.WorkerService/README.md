@@ -1,4 +1,4 @@
-﻿# Esempio di servizio windows in .NET 5
+﻿# Esempio di servizio windows in .NET 6
 
 In debug può essere eseguito senza installazione semplicemente premendo F5
 

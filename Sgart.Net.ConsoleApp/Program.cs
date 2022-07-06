@@ -14,7 +14,7 @@ using Sgart.Net.ConsoleApp.Services;
 namespace Sgart.Net.ConsoleApp
 {
     /// <summary>
-    /// demo console application in .Net 5
+    /// demo console application in .Net 6
     /// con Entity Framework e NLog
     /// </summary>
     public class Program

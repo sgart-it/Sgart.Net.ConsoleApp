@@ -1,4 +1,4 @@
-# Demo console application .Net 5 + EF Core 5 + Nlog
+# Demo console application .Net 6 + EF Core 6 + Nlog
 
 # Servizio windows
 
