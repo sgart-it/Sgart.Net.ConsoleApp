@@ -1,0 +1,22 @@
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+code {
+  color: #E01A76;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.buttons-bar {
+  margin: 1em 0;
+}
+
+  .buttons-bar .btn {
+    margin-right: 2em;
+  }
