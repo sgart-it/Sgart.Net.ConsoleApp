@@ -6,6 +6,7 @@ using Sgart.Net.WebReactApp2.Services;
 using Sgart.Net.WebReactApp2.Models;
 using Microsoft.AspNetCore.Mvc;
 using Sgart.Net.ConsoleApp.BO.InputDTO;
+using Sgart.Net.WebReactApp2.Routes;
 
 // imposto NLog per leggere da appsettimgs.json
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -62,31 +63,37 @@ try
 
 
     // API Todo
-    app.MapGet("/api/todo", async (SgartDIExampleService service) => await service.GetAllAsync());
-    app.MapGet("/api/todo/{id:int}", async (int id, SgartDIExampleService service) => await service.GetAsync(id));
-    app.MapPost("/api/todo", async ([FromBody] TodoAddDTO data, SgartDIExampleService service) =>
-    {
-        var todo = await service.AddAsync(data);
-        if (todo != null)
-        {
-            return Results.NoContent();
-            //return Results.Created($"/api/todo/{todo.TodoId}", todo);
-        }
+    // le API/route le posso dichiarare in una classe a parte, per pulizia del codice, nel caso fossero molte
+    
+    TodoRoute.Add(app, "/api/todo");
+    
+    // oppure direttamente in linea
 
-        return Results.BadRequest();
-    });
-    app.MapPut("/api/todo", async ([FromBody] TodoEditDTO data, SgartDIExampleService service) =>
-    {
-        if (await service.EditAsync(data))
-            return Results.NoContent();
-        return Results.BadRequest();
-    });
-    app.MapDelete("/api/todo/{id}", async (int id, SgartDIExampleService service) =>
-    {
-        if (await service.DeleteAsync(id))
-            return Results.NoContent();
-        return Results.BadRequest();
-    });
+    //app.MapGet("/api/todo", async (SgartDIExampleService service) => await service.GetAllAsync());
+    //app.MapGet("/api/todo/{id:int}", async (int id, SgartDIExampleService service) => await service.GetAsync(id));
+    //app.MapPost("/api/todo", async ([FromBody] TodoAddDTO data, SgartDIExampleService service) =>
+    //{
+    //    var todo = await service.AddAsync(data);
+    //    if (todo != null)
+    //    {
+    //        return Results.NoContent();
+    //        //return Results.Created($"/api/todo/{todo.TodoId}", todo);
+    //    }
+
+    //    return Results.BadRequest();
+    //});
+    //app.MapPut("/api/todo", async ([FromBody] TodoEditDTO data, SgartDIExampleService service) =>
+    //{
+    //    if (await service.EditAsync(data))
+    //        return Results.NoContent();
+    //    return Results.BadRequest();
+    //});
+    //app.MapDelete("/api/todo/{id}", async (int id, SgartDIExampleService service) =>
+    //{
+    //    if (await service.DeleteAsync(id))
+    //        return Results.NoContent();
+    //    return Results.BadRequest();
+    //});
 
     // API weatherforecast
     app.MapGet("/api/weatherforecast", () =>
