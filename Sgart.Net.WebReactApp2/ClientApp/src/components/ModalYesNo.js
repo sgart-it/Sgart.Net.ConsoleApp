@@ -1,27 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
-export class ModalYesNo extends Component {
-  static displayName = ModalYesNo.name;
+export default function ModalYesNo(props) {
+  const { show, title, body, textYes, textCancel } = props;
+  const textOkInt = textYes === undefined ? 'Ok' : textYes;
+  const textCancelInt = textCancel === undefined ? 'Annulla' : textCancel;
 
-
-  render() {
-    const { show, title, body, onClick } = this.props;
-    const textOk = this.props.textYes === undefined ? 'Ok' : this.props.textYes;
-    const textCancel = this.props.textCancel === undefined ? 'Annulla' : this.props.textCancel;
-
-
-    return (
-      show === true &&
-      <Modal isOpen='true' toggle={this.handleCancel}>
-        <ModalHeader toggle={this.handleCancel}>{title}</ModalHeader>
-        <ModalBody>{body}</ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={(e) => { e.preventDefault(); onClick(true, e); }}>{textOk}</Button>
-          {' '}
-          <Button color="secondary" onClick={(e) => { e.preventDefault(); onClick(false, e); }}>{textCancel}</Button>
-        </ModalFooter>
-      </Modal>
-    );
-  }
+  return (
+    show === true &&
+    <Modal isOpen={true} toggle={props.handleCancel}>
+      <ModalHeader toggle={props.handleCancel}>{title}</ModalHeader>
+      <ModalBody>{body}</ModalBody>
+      <ModalFooter>
+          <Button color="primary" onClick={(e) => { e.preventDefault(); props.onClick(true, e); }}>{textOkInt}</Button>
+        {' '}
+          <Button color="secondary" onClick={(e) => { e.preventDefault(); props.onClick(false, e); }}>{textCancelInt}</Button>
+      </ModalFooter>
+    </Modal>
+  );
 }

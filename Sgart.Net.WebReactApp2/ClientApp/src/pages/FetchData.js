@@ -1,23 +1,31 @@
-import React, { Component } from 'react';
-import { Loading } from '../components/Loading';
-import { PageHeader } from '../components/PageHeader';
+import React, { useState, useEffect } from 'react';
+import Loading from '../components/Loading';
+import PageHeader from '../components/PageHeader';
 
-export class FetchData extends Component {
-  static displayName = FetchData.name;
+export default function FetchData(props) {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      forecasts: [],
-      loading: true
+  const [forecasts, setForecasts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    console.log('component mount')
+
+    const populateWeatherData = async () => {
+      const response = await fetch('api/weatherforecast');
+      const data = await response.json();
+      setForecasts(data);
+      setLoading(false);
     };
-  }
 
-  componentDidMount() {
-    this.populateWeatherData();
-  }
+    populateWeatherData();
 
-  static renderForecastsTable(forecasts) {
+    // return a function to execute at unmount
+    return () => {
+      console.log('component will unmount')
+    }
+  }, []); // nessuna dipendenza = ComponentDidMount
+
+  const renderForecastsTable = (forecasts) => {
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
@@ -40,25 +48,18 @@ export class FetchData extends Component {
         </tbody>
       </table>
     );
-  }
+  };
 
-  render() {
-    let contents = this.state.loading
-      ? <Loading show={this.state.loading} />
-      : FetchData.renderForecastsTable(this.state.forecasts);
+  const contents = loading
+    ? <Loading show={loading} />
+    : renderForecastsTable(forecasts);
 
-    return (
-      <div>
-        <PageHeader title='Weather forecast' description='This component demonstrates fetching data from the server.' />
-        <p></p>
-        {contents}
-      </div>
-    );
-  }
+  return (
+    <div>
+      <PageHeader title='Weather forecast' description='This component demonstrates fetching data from the server.' />
+      <p></p>
+      {contents}
+    </div>
+  );
 
-  async populateWeatherData() {
-    const response = await fetch('api/weatherforecast');
-    const data = await response.json();
-    this.setState({ forecasts: data, loading: false });
-  }
 }

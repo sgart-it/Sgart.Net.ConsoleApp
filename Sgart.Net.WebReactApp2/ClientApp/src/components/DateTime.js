@@ -1,31 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export class DateTime extends Component {
-  static displayName = DateTime.name;
+export default function DateTime(props) {
+  const { date, showTime, showDate } = props;
+  // TODO: l'aggiunta della 'Z' è un workaround temporano finché non capisco come serializzare in automatico le date in UTC
+  const dt = new Date(date + 'Z'); // es.: 2019-07-26T00:00:00
 
-  render() {
-    // TODO: l'aggiunta della 'Z' è un workaround temporano finchénon capisco come serializzare in automatico le date in UTC
-    const dt = new Date(this.props.date + 'Z'); // es.: 2019-07-26T00:00:00
+  const pad = (num) => (num < 10 ? '0' : '') + num;
 
-    const showTime = this.props.showTime !== undefined || this.props.showTime !== null || this.props.showTime === true;
-    const showDate = this.props.showTime === undefined || this.props.showTime === null || this.props.showTime === true || showTime === false;
-
-    const pad = (num) => {
-      return (num < 10 ? '0' : '') + num;
-    };
-
-    // formatto la data in italiano dd/MM/yyyy HH:mm:ss
-    const dtString = (
-      showDate === true
-        ? pad(dt.getDate()) + '/' + pad(dt.getMonth() + 1) + '/' + pad(dt.getFullYear())
-        : ''
-    ) + (showTime === true
-      ? ' ' + pad(dt.getHours()) + ':' + pad(dt.getMinutes()) + ':' + pad(dt.getSeconds())
+  const showTimeInt = showTime !== undefined || showTime !== null || showTime === true;
+  // formatto la data in italiano dd/MM/yyyy HH:mm:ss
+  const dtString = (
+    showTimeInt === true
+      ? pad(dt.getDate()) + '/' + pad(dt.getMonth() + 1) + '/' + pad(dt.getFullYear())
       : ''
-      );
-
-    return (
-      <span className='date-time'>{dtString}</span>
+  ) + (showDate === undefined || showDate === null || showDate === true || showTimeInt === false
+    ? ' ' + pad(dt.getHours()) + ':' + pad(dt.getMinutes()) + ':' + pad(dt.getSeconds())
+    : ''
     );
-  }
+
+  return (
+    <span className='date-time'>{dtString}</span>
+  );
 }

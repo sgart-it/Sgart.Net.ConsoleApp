@@ -1,14 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './ErrorMessage.css';
 
-export class ErrorMessage extends Component {
-  static displayName = ErrorMessage.name;
+export default function ErrorMessage(props) {
+  const { message } = props;
 
-  render() {
-    const { message } = this.props;
-
-    return (
-      message !== undefined && message !== null && message !== '' && <div className='error-message'>{message}</div>
-    );
-  }
+  return (
+    message !== undefined && message !== null && message !== '' && <div className='error-message'>{message}</div>
+  );
 }

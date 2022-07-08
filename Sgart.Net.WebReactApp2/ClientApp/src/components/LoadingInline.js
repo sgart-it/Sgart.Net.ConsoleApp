@@ -1,12 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Spinner } from 'reactstrap';
 
-export class LoadingInline extends Component {
-  static displayName = LoadingInline.name;
-
-  render() {
-    return (
-      this.props.show === true && <Spinner size="sm" color="secondary" />
-    );
-  }
+export default function LoadingInline(props) {
+  return (
+    props.show === true && <Spinner size="sm" color="secondary" />
+  );
 }

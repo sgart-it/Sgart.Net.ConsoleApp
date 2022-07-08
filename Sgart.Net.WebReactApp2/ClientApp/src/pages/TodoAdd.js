@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import todoService from '../services/TodoService'
 import { Button, Form, FormGroup, Label, Input, Alert, FormFeedback } from 'reactstrap';
 import { Link, Navigate } from 'react-router-dom';
-import { PageHeader } from '../components/PageHeader';
-import { LoadingInline } from '../components/LoadingInline';
+import PageHeader from '../components/PageHeader';
+import LoadingInline from '../components/LoadingInline';
 
 export class TodoAdd extends Component {
   static displayName = TodoAdd.name;

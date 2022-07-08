@@ -1,6 +1,6 @@
-import { Counter } from "./pages/Counter";
-import { FetchData } from "./pages/FetchData";
-import { Home } from "./pages/Home";
+import Counter from "./pages/Counter";
+import FetchData from "./pages/FetchData";
+import Home from "./pages/Home";
 import { Todo } from "./pages/Todo";
 import { TodoAdd } from "./pages/TodoAdd";
 import { TodoEdit } from "./pages/TodoEdit";

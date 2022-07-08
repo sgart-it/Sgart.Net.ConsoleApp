@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import todoService from '../services/TodoService'
-import { PageHeader } from '../components/PageHeader';
-import { DateTime } from '../components/DateTime';
-import { ModalYesNo } from '../components/ModalYesNo';
-import { LoadingInline } from '../components/LoadingInline';
+import PageHeader from '../components/PageHeader';
+import DateTime from '../components/DateTime';
+import ModalYesNo from '../components/ModalYesNo';
+import LoadingInline from '../components/LoadingInline';
 import './Todo.css';
 
 export class Todo extends Component {

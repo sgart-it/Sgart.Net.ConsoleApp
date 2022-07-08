@@ -1,30 +1,25 @@
-import React, { Component } from 'react';
-import { PageHeader } from '../components/PageHeader';
+import React, { useState } from 'react';
+import PageHeader from '../components/PageHeader';
 
-export class Counter extends Component {
-  static displayName = Counter.name;
+export default function Counter() {
 
-  constructor(props) {
-    super(props);
-    this.state = { currentCount: 0 };
-    this.incrementCounter = this.incrementCounter.bind(this);
-  }
+  const [currentCount, setCurrentCount] = useState(0);
 
-  incrementCounter() {
-    this.setState({
-      currentCount: this.state.currentCount + 1
-    });
-  }
+  const incrementCounter = () => setCurrentCount(currentCount + 1);
+  const decrementCounter = () => {
+    if (currentCount > 0)
+      setCurrentCount(currentCount - 1)
+  };
 
-  render() {
-    return (
-      <div>
-        <PageHeader title='Counter' description='This is a simple example of a React component.' />
+  return (
+    <div>
+      <PageHeader title='Counter' description='This is a simple example of a React component.' />
 
-        <p aria-live="polite">Current count: <strong>{this.state.currentCount}</strong></p>
+      <p aria-live="polite">Current count: <strong>{currentCount}</strong></p>
 
-        <button className="btn btn-primary" onClick={this.incrementCounter}>Increment</button>
-      </div>
-    );
-  }
+      <button className="btn btn-primary" onClick={incrementCounter}>Increment +1</button>
+      <span> </span>
+      <button className="btn btn-primary" onClick={decrementCounter}>Decrement -1</button>
+    </div>
+  );
 }
