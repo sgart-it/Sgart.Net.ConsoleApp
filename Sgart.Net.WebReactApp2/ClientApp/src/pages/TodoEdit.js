@@ -1,123 +1,27 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, Navigate, useParams } from 'react-router-dom'; // useParams per leggere i parametri dalla url
 import todoService from '../services/TodoService'
 import { Button, Form, FormGroup, Label, Input, Alert, FormFeedback } from 'reactstrap';
-import { Link, Navigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import LoadingInline from '../components/LoadingInline';
 
-export class TodoEdit extends Component {
-  static displayName = TodoEdit.name;
+export default function TodoEdit() {
+  //const id = this.props.match.params.id;
+  //const id = window.location.pathname.split("/")[3];
+  const params = useParams();
 
-  constructor(props) {
-    super(props);
+  const [id, setId] = useState(params.id | 0);
+  const [message, setMessage] = useState('');
+  const [completed, setCompleted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [redirecUrl, setRedirecUrl] = useState(null);
 
-    //TODO: da sistemare 
-    //const id = this.props.match.params.id;
-    const id = window.location.pathname.split("/")[3];
+  const populateData = async () => {
+    setLoading(true);
+    setError(null);
 
-    this.state = {
-      id: id | 0,
-      message: '',
-      completed: false,
-      loading: false,
-      error: null,
-      redirecUrl: null
-    };
-  }
-
-  componentDidMount() {
-    this.populateData();
-  }
-
-  handleSubmit = async (e) => {
-    e.preventDefault()
-
-    this.setState({
-      loading: true,
-      error: null
-    });
-
-    const result = await todoService.save({
-      todoId: this.state.id,
-      message: this.state.message,
-      completed: this.state.completed
-    });
-
-    const valid = result.ok === true;
-
-    this.setState({
-      loading: false,
-      error: result.message,
-      redirecUrl: valid ? '/todo' : null
-    });
-
-  }
-
-  isIdValid = () => {
-    return typeof this.state.id === 'number' && this.state.message.id !== 0;
-  }
-
-  isMessageValid = () => {
-    return this.state.message !== null && this.state.message.length > 0;
-  }
-
-  isButtonEnabled = () => {
-    return this.isMessageValid() && this.state.loading === false;
-  }
-
-  renderForm = () => {
-    const { message, completed, loading } = this.state;
-
-    return (
-      <Form onSubmit={this.handleSubmit}>
-        <FormGroup>
-          <Label for="message1">Messaggio</Label>
-          <Input type="text" value={message} onChange={(e) => this.setState({ message: e.target.value })} invalid={!this.isMessageValid()}
-            name="message1" id="message1" placeholder="" />
-          <FormFeedback invalid='true'>Il messaggio non pu&ograve; essere vuoto</FormFeedback>
-        </FormGroup>
-        <FormGroup>
-          <Input type="switch" id="completed-1" label={completed === true ? 'Completato' : 'Da completare'}
-            checked={completed} onChange={(e) => this.setState({ completed: e.target.checked })} />
-        </FormGroup>
-        <div className='buttons-bar'>
-          <Button color="primary" size="sm" disabled={!this.isButtonEnabled()}>Salva</Button>
-          <Button color="secondary" size="sm" tag={Link} to='/todo'>Annulla</Button>
-          <LoadingInline show={loading} />
-        </div>
-        <Alert color="secondary">Debug only: State={JSON.stringify(this.state)}</Alert>
-      </Form>
-    );
-  }
-
-  render() {
-    if (this.state.redirecUrl != null) {
-      return (
-        <Navigate to={this.state.redirecUrl} />
-      );
-    }
-
-
-
-    return (
-      <div>
-        <PageHeader title={'Todo modifica id: ' + this.state.id} description='Esempio modifica item' message={this.state.error} />
-        {this.isIdValid()
-          ? this.renderForm()
-          : <Alert color="secondary">L'id non pu&ograve; essere nullo</Alert>
-        }
-      </div>
-
-    );
-  }
-
-  populateData = async () => {
-    this.setState({
-      loading: true,
-      error: null
-    });
-
-    const result = await todoService.get(this.state.id);
+    const result = await todoService.get(id);
 
     const valid = result.ok === true;
 
@@ -125,11 +29,93 @@ export class TodoEdit extends Component {
       result.message = 'Error undefined';
     }
 
-    this.setState({
-      message: valid ? result.data.message : '',
-      completed: valid ? result.data.completed : false,
-      loading: false,
-      error: result.message
+    setMessage(valid ? result.data.message : '');
+    setCompleted(valid ? result.data.completed : false);
+    setError(result.message);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    console.log('component mount')
+
+    populateData();
+
+    // return a function to execute at unmount
+    return () => {
+      console.log('component will unmount')
+    }
+  }, []); // nessuna dipendenza = componentDidMount
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    setLoading(true);
+    setError(null);
+
+    const result = await todoService.save({
+      todoId: id,
+      message: message,
+      completed: completed
     });
+
+    const valid = result.ok === true;
+
+    setLoading(false);
+    setError(result.message);
+    setRedirecUrl(valid ? '/todo' : null);
+  };
+
+  const isIdValid = () => typeof id === 'number' && id !== 0;
+  const isMessageValid = () => message !== null && message.length > 0;
+  const isButtonEnabled = () => isMessageValid() && loading === false;
+
+  const renderForm = () => {
+    return (
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label for="message1">Messaggio</Label>
+          <Input type="text" value={message} onChange={(event) => setMessage(event.target.value)} invalid={!isMessageValid()}
+            name="message1" id="message1" placeholder="" />
+          <FormFeedback invalid='true'>Il messaggio non pu&ograve; essere vuoto</FormFeedback>
+        </FormGroup>
+        <FormGroup>
+          <Input type="switch" id="completed-1" label={completed === true ? 'Completato' : 'Da completare'}
+            checked={completed} onChange={(event) => setCompleted(event.target.checked)} />
+        </FormGroup>
+        <div className='buttons-bar'>
+          <Button color="primary" size="sm" disabled={!isButtonEnabled()}>Salva</Button>
+          <Button color="secondary" size="sm" tag={Link} to='/todo'>Annulla</Button>
+          <LoadingInline show={loading} />
+        </div>
+        {/*<Alert color="secondary">Debug only: State={JSON.stringify(state)}</Alert>*/}
+        <Alert color="secondary">Debug only: State={JSON.stringify({
+          id:id,
+          message:message,
+          completed:completed,
+          loading:loading,
+          error:error,
+          redirectUrl:redirecUrl
+        })}</Alert>
+      </Form>
+    );
+  };
+
+  if (redirecUrl != null) {
+    return (
+      <Navigate to={redirecUrl} />
+    );
   }
+
+
+
+  return (
+    <div>
+      <PageHeader title={'Todo modifica id: ' + id} description='Esempio modifica item' message={error} />
+      {isIdValid()
+        ? renderForm()
+        : <Alert color="secondary">L'id non pu&ograve; essere nullo</Alert>
+      }
+    </div>
+
+  );
 }

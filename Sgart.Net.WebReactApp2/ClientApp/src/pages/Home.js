@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div>
       <PageHeader
-        title='Demo Web application .Net 6 minimal api + EF Core 6 + Nlog + React 18 function / Bootstrap 5 + WebAPI'
+        title='Demo Web application .Net 6 minimal api + EF Core 6 + Nlog + React 18 function & hooks / Bootstrap 5 + WebAPI'
         description='Esempio lettura API in React' />
       <hr />
       <Button variant="outline-light" size="sm" tag={Link} to={'/todo/'}>Vai all'esempio Todo</Button>

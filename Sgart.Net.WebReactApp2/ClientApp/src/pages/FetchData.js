@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Loading from '../components/Loading';
 import PageHeader from '../components/PageHeader';
 
-export default function FetchData(props) {
+export default function FetchData() {
 
   const [forecasts, setForecasts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +23,7 @@ export default function FetchData(props) {
     return () => {
       console.log('component will unmount')
     }
-  }, []); // nessuna dipendenza = ComponentDidMount
+  }, []); // nessuna dipendenza = componentDidMount
 
   const renderForecastsTable = (forecasts) => {
     return (

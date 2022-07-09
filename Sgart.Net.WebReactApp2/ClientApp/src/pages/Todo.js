@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import todoService from '../services/TodoService'
@@ -8,62 +8,56 @@ import ModalYesNo from '../components/ModalYesNo';
 import LoadingInline from '../components/LoadingInline';
 import './Todo.css';
 
-export class Todo extends Component {
-  static displayName = Todo.name;
+export default function Todo() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [itemToDelete, setItemToDelete] = useState(0);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      items: [],
-      loading: true,
-      error: null,
-      itemToDelete: 0
-    };
-  }
+  const refreshData = async () => {
+    setLoading(true);
+    setError(null);
 
-  componentDidMount() {
-    this.populateData();
-  }
+    const result = await todoService.getAll();
 
-  handleRefresh = () => {
-    this.populateData();
-  }
+    setItems(result.ok === true ? result.data : null);
+    setError(result.message);
+    setLoading(false);
+  };
 
-  handleExport = () => {
-    window.location.assign("/api/todo/excel?t=" + (new Date()).getTime().toString());
-  }
+  useEffect(() => {
+    console.log('component mount')
 
-  handleShowDelete = async (todoId, e) => {
-    this.setState({
-      itemToDelete: todoId
-    });
-  }
+    refreshData();
 
-  handleDelete = async (confirm, e) => {
-    e.preventDefault()
+    // return a function to execute at unmount
+    return () => {
+      console.log('component will unmount')
+    }
+  }, []); // nessuna dipendenza = componentDidMount
 
-    this.setState({
-      loading: true,
-      error: null
-    });
 
-    const todoId = this.state.itemToDelete;
+  const handleExport = () => window.location.assign("/api/todo/excel?t=" + (new Date()).getTime().toString());
+  const handleShowDelete = async (todoId) => setItemToDelete(todoId);
+  const handleDelete = async (confirm, event) => {
+    event.preventDefault();
+
+    setLoading(true);
+    setError(null);
+
+    const todoId = itemToDelete;
 
     if (confirm === true && todoId !== 0)
       await todoService.delete(todoId);
 
-    this.setState({
-      loading: true,
-      error: null,
-      itemToDelete: 0
-    });
+    setItemToDelete(0);
+    //setError(null);
+    //setLoading(true);
 
+    await refreshData();
+  };
 
-    this.populateData();
-  }
-
-  // questo metodo è statico quindi non posso usare this, ma devo passargli gli oggetti che mi servono
-  static renderTable(items, handleShowDelete) {
+  const renderTable = (items, handleShowDelete) => {
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
@@ -87,7 +81,7 @@ export class Todo extends Component {
                 <td>
                   <Button color="primary" size="sm" tag={Link} to={'/todo/edit/' + item.todoId}>Modifica</Button>
                   {' ' /* attenzione il Button usa l'evento onClick non onChange */}
-                  <Button color="secondary" size="sm" onClick={(e) => handleShowDelete(item.todoId, e)}>Cancella</Button>
+                  <Button color="secondary" size="sm" onClick={(event) => handleShowDelete(item.todoId, event)}>Cancella</Button>
                 </td>
               </tr>
             )
@@ -95,43 +89,23 @@ export class Todo extends Component {
         </tbody>
       </table>
     );
-  }
+  };
 
-  render() {
-    let contents = Todo.renderTable(this.state.items, this.handleShowDelete);
+  return (
+    <div>
+      <PageHeader title='Todo' description='Esempio lettura API in React' message={error} />
+      <div className='buttons-bar'>
+        <Button color="primary" size="sm" tag={Link} to='/todo/add'>Aggiungi</Button>
 
-    return (
-      <div>
-        <PageHeader title='Todo' description='Esempio lettura API in React' message={this.state.error} />
-        <div className='buttons-bar'>
-          <Button color="primary" size="sm" tag={Link} to='/todo/add'>Aggiungi</Button>
+        <Button color="secondary" size="sm" onClick={refreshData}>Aggiorna</Button>
 
-          <Button color="secondary" size="sm" onClick={this.handleRefresh}>Aggiorna</Button>
+        <Button color="secondary" size="sm" onClick={handleExport}>Export</Button>
 
-          <Button color="secondary" size="sm" onClick={this.handleExport}>Export</Button>
-
-          <LoadingInline show={this.state.loading} />
-        </div>
-        {contents}
-        {/* modal di conferma cancellazione */}
-        <ModalYesNo show={this.state.itemToDelete !== 0} onClick={this.handleDelete} title='Delete' body={`Vuoi cancellare l'item con id ${this.state.itemToDelete} ?`} />
+        <LoadingInline show={loading} />
       </div>
-    );
-  }
-
-  async populateData() {
-    this.setState({
-      loading: true,
-      error: null
-    });
-
-    const result = await todoService.getAll();
-
-    this.setState({
-      items: result.ok === true ? result.data : null,
-      loading: false,
-      error: result.message
-    });
-  }
-
+      {renderTable(items, handleShowDelete)}
+      {/* modal di conferma cancellazione */}
+      <ModalYesNo show={itemToDelete !== 0} onClick={handleDelete} title='Delete' body={`Vuoi cancellare l'item con id ${itemToDelete} ?`} />
+    </div>
+  );
 }

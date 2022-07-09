@@ -12,9 +12,9 @@ export default function ModalYesNo(props) {
       <ModalHeader toggle={props.handleCancel}>{title}</ModalHeader>
       <ModalBody>{body}</ModalBody>
       <ModalFooter>
-          <Button color="primary" onClick={(e) => { e.preventDefault(); props.onClick(true, e); }}>{textOkInt}</Button>
+          <Button color="primary" onClick={(event) => { event.preventDefault(); props.onClick(true, event); }}>{textOkInt}</Button>
         {' '}
-          <Button color="secondary" onClick={(e) => { e.preventDefault(); props.onClick(false, e); }}>{textCancelInt}</Button>
+          <Button color="secondary" onClick={(event) => { event.preventDefault(); props.onClick(false, event); }}>{textCancelInt}</Button>
       </ModalFooter>
     </Modal>
   );
