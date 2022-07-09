@@ -10,7 +10,7 @@ export default function TodoEdit() {
   //const id = window.location.pathname.split("/")[3];
   const params = useParams();
 
-  const [id, setId] = useState(params.id | 0);
+  const [id] = useState(params.id | 0);
   const [message, setMessage] = useState('');
   const [completed, setCompleted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,12 +38,14 @@ export default function TodoEdit() {
   useEffect(() => {
     console.log('component mount')
 
-    populateData();
+    const load = async () => await populateData();
+    load();
 
     // return a function to execute at unmount
     return () => {
       console.log('component will unmount')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // nessuna dipendenza = componentDidMount
 
   const handleSubmit = async (event) => {

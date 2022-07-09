@@ -13,9 +13,11 @@ const save = async (todo) => {
 };
 const deleteInt = async (todoId) => await baseService.fetchDelete('api/todo/' + todoId);
 
-export default {
+const todoService = {
   getAll,
   get,
   save,
   delete: deleteInt
 };
+
+export default todoService;

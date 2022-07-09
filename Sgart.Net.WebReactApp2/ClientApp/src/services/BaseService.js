@@ -57,12 +57,14 @@ const fetchBase = async (url, fetchMethod, addAuthorizationHeader, jsonObject) =
   return result;
 };
 
-export default {
+const baseService = {
   fetchGet,
   fetchPost,
   fetchPut,
   fetchDelete
 };
+
+export default baseService;
 
 export const FetchMethods = {
   GET: 'GET',
