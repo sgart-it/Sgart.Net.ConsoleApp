@@ -10,7 +10,7 @@ Sgart.Net.WebReactApp2: demo web app in React 18 function & hooks + .NET 6 minim
 
 Sgart.Net.WorkerService: demo servizio windows
 
-Sgart.Net.MinimalAPI: demo .NET 6 minimal web API + NLog
+Sgart.Net.MinimalAPI: demo .NET 6 minimal web API + NLog + EF 6
 
 
 [Sgart.it](https://www.sgart.it)
