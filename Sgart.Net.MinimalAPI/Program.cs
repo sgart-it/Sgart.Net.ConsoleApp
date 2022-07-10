@@ -11,9 +11,17 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    // registro EF DB context usando InMemoryDatabase, add services to the container.
+    // registro EF DB context
+
+    // usando InMemoryDatabase, add services to the container.
     // Note: InMemoryDatabase da usare solo per Demo, non usare in produzione
-    builder.Services.AddDbContext<TodoDbContext>(opt => opt.UseInMemoryDatabase("SgartTodoList"));
+    //builder.Services.AddDbContext<TodoDbContext>(opt => opt.UseInMemoryDatabase("SgartTodoList"));
+
+    // oppure usando un DB reale
+    builder.Services.AddDbContext<TodoDbContext>(option =>
+    {
+        option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    });
 
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -45,11 +53,11 @@ try
     });
 
     // API Todo basate su TodoDbContext
-    app.MapGet("/todo", async (TodoDbContext db) => await db.Todos.ToListAsync());
-    app.MapGet("/todo/completed", async (TodoDbContext db) => await db.Todos.Where(x => x.Completed == true).ToListAsync());
+    app.MapGet("/todo", async (TodoDbContext db) => await db.Todos.AsNoTracking().ToListAsync());
+    app.MapGet("/todo/completed", async (TodoDbContext db) => await db.Todos.AsNoTracking().Where(x => x.Completed == true).ToListAsync());
     // /todo/text/contains?text=ciao
     app.MapGet("/todo/contains", async (string text, TodoDbContext db) =>
-        await db.Todos
+        await db.Todos.AsNoTracking()
             .Where(x => x.Text != null && x.Text.Contains(text, StringComparison.InvariantCultureIgnoreCase))
             .ToListAsync());
     app.MapGet("/todo/{todoId}", async (int todoId, TodoDbContext db) =>
@@ -58,7 +66,7 @@ try
             : Results.NotFound());
     app.MapPost("/todo", async (TodoInputDTO inputTodo, TodoDbContext db) =>
     {
-    // validare sempre i parametri di ingresso
+        // validare sempre i parametri di ingresso
         if (string.IsNullOrWhiteSpace(inputTodo.Text))
             return Results.BadRequest("Invalid Text");
 
@@ -80,7 +88,7 @@ try
         if (todo is null)
             return Results.NotFound();
 
-    // validare sempre i parametri di ingresso
+        // validare sempre i parametri di ingresso
         if (string.IsNullOrWhiteSpace(inputTodo.Text))
             return Results.BadRequest("Invalid Text");
 
@@ -120,6 +128,7 @@ finally
 // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/record
 record MultInputDTO(int V1, int V2);
 
+// volendo posso usare direttamente la classe Todo senza creare un record
 record TodoInputDTO(string Text, bool Completed);
 
 class Todo
