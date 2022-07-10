@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sgart.Net.WebReactApp", "Sg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sgart.Net.WorkerService", "Sgart.Net.WorkerService\Sgart.Net.WorkerService.csproj", "{7EEAB10B-DF6A-4385-A2B0-FE3151DD6028}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sgart.Net.WebReactApp2", "Sgart.Net.WebReactApp2\Sgart.Net.WebReactApp2.csproj", "{FE31AA4F-1EEF-4513-AA59-343CDC637BFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sgart.Net.WebReactApp2", "Sgart.Net.WebReactApp2\Sgart.Net.WebReactApp2.csproj", "{FE31AA4F-1EEF-4513-AA59-343CDC637BFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sgart.Net.MinimalAPI", "Sgart.Net.MinimalAPI\Sgart.Net.MinimalAPI.csproj", "{205EA969-CDC9-4219-84F1-A041CC38AC71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{FE31AA4F-1EEF-4513-AA59-343CDC637BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE31AA4F-1EEF-4513-AA59-343CDC637BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE31AA4F-1EEF-4513-AA59-343CDC637BFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{205EA969-CDC9-4219-84F1-A041CC38AC71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{205EA969-CDC9-4219-84F1-A041CC38AC71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{205EA969-CDC9-4219-84F1-A041CC38AC71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{205EA969-CDC9-4219-84F1-A041CC38AC71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
