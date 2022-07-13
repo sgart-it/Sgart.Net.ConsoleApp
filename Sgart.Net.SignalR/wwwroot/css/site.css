@@ -1,0 +1,144 @@
+:root {
+  --bg-color-black: #000000;
+  --bg-color-gray: #444444;
+  --msg-me-bg-color: #f0ad4e;
+  --msg-me-text-color: #000000;
+  --msg-others-bg-color: #600000;
+  --msg-others-text-color: #eeeeee;
+  --msg-date-color: #888888;
+  --msg-user-color: #cccccc;
+}
+
+html, body {
+  height: 100%;
+  font: 100%/1.5em "Arial", sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+html, body, * {
+  box-sizing: border-box;
+}
+
+body {
+  flex-direction: column;
+}
+
+body, header, .msg, form {
+  display: flex;
+}
+
+header, blockquote {
+  padding: .5em;
+  margin: 0;
+}
+
+header {
+  background-color: #374455;
+  color: white;
+  padding-right: 0;
+  line-height: 0.5em;
+}
+
+.messages, input {
+  background-color: black;
+}
+
+input {
+  padding-left: .325em;
+  border: none;
+  color: white;
+  flex: 1;
+}
+
+.messages {
+  padding: 1em;
+  margin: 0;
+  flex: 1;
+  overflow: auto;
+}
+
+.msg {
+  position: relative;
+  margin-bottom: 2em;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.msg-header {
+  display: flex;
+  text-align: right;
+}
+
+.msg-date {
+  color: var(--msg-date-color);
+  font-size: .9em;
+}
+
+.msg-user {
+  color: var(--msg-user-color);
+  font-size: .9em;
+  font-weight: bold;
+}
+
+.msg-body {
+  display: flex;
+  min-height: 3em;
+}
+
+.msg-my {
+  padding-left: 20%;
+}
+
+.msg-my .msg-header{
+  flex-direction: row-reverse;
+}
+.msg-my .msg-date {
+  margin-right: 2em;
+}
+.msg-my .msg-body {
+  background-color: var(--msg-me-bg-color);
+  color: var(--msg-me-text-color);
+  border-radius: .5em;
+}
+
+.msg-others {
+  padding-right: 20%;
+}
+
+.msg-others .msg-header {
+  flex-direction: row;
+}
+.msg-others .msg-date {
+  margin-left: 2em;
+}
+.msg-others .msg-body {
+  background-color: var(--msg-others-bg-color);
+  color: var(--msg-others-text-color);
+  border-radius: .5em;
+}
+
+.form-input {
+  background-color: #727b80;
+  padding: 1px;
+  min-height: 40px;
+}
+
+  .form-input input {
+    height: 100%;
+    outline: none;
+  }
+
+  .form-input button {
+    flex-grow: 0;
+    text-transform: uppercase;
+    background-color: var(--bg-color-black);
+    color: var(--msg-me-bg-color);
+    font-weight: bold;
+    border: 0;
+  }
+
+    .form-input button:hover {
+      background-color: var(--bg-color-gray);
+    }

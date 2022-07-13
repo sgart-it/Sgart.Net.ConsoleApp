@@ -12,5 +12,6 @@ Sgart.Net.WorkerService: demo servizio windows
 
 Sgart.Net.MinimalAPI: demo .NET 6 minimal web API + NLog + EF 6
 
+Sgart.Net.SignalR: demo Web application Chat .Net 6 + SignalR + JavaScript
 
 [Sgart.it](https://www.sgart.it)

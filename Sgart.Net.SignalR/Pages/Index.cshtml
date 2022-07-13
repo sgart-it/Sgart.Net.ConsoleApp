@@ -1,0 +1,18 @@
+﻿@page
+
+<header class="contact">
+    <section>
+        User: <input type="text" id="user-input" value="User 1" />
+    </section>
+</header>
+
+<section class="messages" id="messages-list">
+</section>
+
+<form id="message-form" class="form-input">
+    <input type="text" id="message-input" autocomplete="off" />
+    <button type="submit" id="send-button">Send</button>
+</form>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
