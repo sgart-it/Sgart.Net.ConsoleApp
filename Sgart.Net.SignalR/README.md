@@ -1,3 +1,3 @@
 ﻿# Demo Web application Chat .Net 6 + SignalR + JavaScript
 
-Esempio di sempliche chat usando SignalR
+Vedi [Chat con SignalR e C#](https://www.sgart.it/IT/informatica/chat-con-signalr-e-c/post)

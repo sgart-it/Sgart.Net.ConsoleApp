@@ -8,12 +8,19 @@ const htmlEncode = msg => {
 };
 
 try {
-  //Disable the send button until connection is established.
+
+  // Disable the send button until connection is established.
   document.getElementById("send-button").disabled = true;
 
   const clientUniqueId = Math.floor(Math.random() * 999999999) + "-" + Date.now();  // TODO: da migliorare
 
   document.getElementById("user-input").value = "User " + Math.floor(Math.random() * 9999);
+
+  // salvo il riferimento alla text box del messaggi
+  const elmMessage = document.getElementById("message-input");
+  // imposto il focus
+  elmMessage.value = "";
+  elmMessage.focus();
 
   //---------------------------------------------------------------------------------------
   // setup chat
@@ -23,7 +30,6 @@ try {
   connection.start()
     .then(() => document.getElementById("send-button").disabled = false)
     .catch(err => console.error(err.toString()));
-
 
   // receive message
 
@@ -52,7 +58,6 @@ try {
     }
   });
 
-
   // send message
 
   const sendMessage = event => {
@@ -61,8 +66,6 @@ try {
       if (document.getElementById("send-button").disabled === true) {
         return;
       }
-
-      const elmMessage = document.getElementById("message-input");
 
       if (elmMessage.value.length === 0) {
         return;
@@ -74,8 +77,6 @@ try {
         message: elmMessage.value
       };
 
-
-
       // SendMessage = nome del metodo nella classe Hub
       connection.invoke("SendMessage", data)
         .catch(err => console.error(err.toString()));
@@ -85,7 +86,6 @@ try {
     } catch (ex) {
       console.error(ex, "sendMessage");
     }
-
   };
 
   // aggancio l'evento di submit al form
@@ -93,5 +93,4 @@ try {
 
 } catch (ex) {
   console.error(ex, "chat");
-
 }

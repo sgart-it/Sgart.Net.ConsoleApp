@@ -21,11 +21,13 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();
+//app.UseRouting();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapRazorPages();
+
+// mapping del canali di comunicazione
 app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
